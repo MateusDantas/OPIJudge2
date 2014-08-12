@@ -1,0 +1,2 @@
+mvn archetype:generate -DgroupId=com.opijudge.core -DartifactId=OpiJudgeAPI -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn eclipse:eclipse
