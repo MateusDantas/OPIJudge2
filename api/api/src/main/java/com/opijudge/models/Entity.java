@@ -1,11 +1,11 @@
 package com.opijudge.models;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.mapping.List;
 
 import com.opijudge.models.util.HibernateUtil;
 
@@ -78,7 +78,7 @@ public class Entity {
 		
 	}
 	
-	public <T> List getAllByProperty(HashMap <String, T> mapKeys) {
+	public <T> List<?> getAllByProperty(HashMap <String, T> mapKeys) {
 		
 		Session session = null;
 		try {
@@ -91,7 +91,7 @@ public class Entity {
 				criteria.add(Restrictions.eq(key, mapKeys.get(key)));
 			}
 			
-			return (List) criteria.list();
+			return (List<?>) criteria.list();
 		
 		} catch (Exception e) {
 			

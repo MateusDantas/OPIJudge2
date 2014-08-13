@@ -6,6 +6,7 @@ public class User extends Entity {
 
 	private int id;
 	private String email, password, username, hashedPassword;
+	private String name;
 	private int accessLevel, isBlocked;
 
 	public User() {
@@ -17,9 +18,9 @@ public class User extends Entity {
 		this.setId(id);
 	}
 
-	public User(String email, String password, String username,
-			int accessLevel, int isBlocked) {
+	public User(String name, String username, String password, String email, int accessLevel, int isBlocked) {
 
+		this.setName(name);
 		this.setEmail(email);
 		this.setPassword(password);
 		this.setHashedPassword(hashPassword(password));
@@ -91,5 +92,13 @@ public class User extends Entity {
 
 	public void setHashedPassword(String hashedPassword) {
 		this.hashedPassword = hashedPassword;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
