@@ -1,5 +1,7 @@
 package com.opijudge.models;
 
-public class SubmissionDAO {
+public interface SubmissionDAO {
 
+	public boolean saveCode();
+	public boolean loadCode();
 }

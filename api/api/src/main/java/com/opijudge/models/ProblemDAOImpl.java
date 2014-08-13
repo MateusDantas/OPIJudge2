@@ -8,6 +8,12 @@ public class ProblemDAOImpl implements ProblemDAO {
 	private File testPlan = null, testCases = null, statement = null;
 	private String basePath;
 
+	public ProblemDAOImpl(Problem problem, String basePath) {
+
+		this.setProblem(problem);
+		this.setBasePath(basePath);
+	}
+
 	public ProblemDAOImpl(Problem problem, File testPlan, File testCases,
 			File statement, String basePath) {
 
@@ -20,17 +26,17 @@ public class ProblemDAOImpl implements ProblemDAO {
 
 	public boolean saveTestPlan() {
 
-		return saveFile(testPlan, "testplan.txt");
+		return saveFile(testPlan, getTotalPath() + "testplan.txt");
 	}
 
 	public boolean saveTestCases() {
 
-		return saveFile(testCases, "testcases.zip");
+		return saveFile(testCases, getTotalPath() + "testcases.zip");
 	}
 
 	public boolean saveStatement() {
 
-		return saveFile(statement, "statement.pdf");
+		return saveFile(statement, getTotalPath() + "statement.pdf");
 	}
 
 	public boolean saveAll() {
@@ -38,7 +44,7 @@ public class ProblemDAOImpl implements ProblemDAO {
 		return saveTestPlan() && saveTestCases() && saveStatement();
 	}
 
-	public boolean saveFile(File file, String endPath) {
+	public boolean saveFile(File file, String totalPath) {
 
 		try {
 			if (file == null)
@@ -47,12 +53,8 @@ public class ProblemDAOImpl implements ProblemDAO {
 			if (!file.canWrite())
 				return false;
 
-			String totalPath = getTotalPath();
-
 			if (totalPath == null)
 				return false;
-
-			totalPath += endPath;
 
 			if (file.renameTo(new File(totalPath)))
 				return true;
@@ -65,25 +67,27 @@ public class ProblemDAOImpl implements ProblemDAO {
 	}
 
 	public boolean loadTestPlan() {
-		
+
 		File file = loadFile(getTotalPath() + "testplan.txt");
 		if (file == null)
 			return false;
 		this.setTestPlan(file);
+
 		return true;
 	}
 
 	public boolean loadTestCases() {
-		
+
 		File file = loadFile(getTotalPath() + "testcases.zip");
 		if (file == null)
 			return false;
 		this.setTestCases(file);
+
 		return true;
 	}
 
 	public boolean loadStatement() {
-		
+
 		File file = loadFile(getTotalPath() + "statement.pdf");
 		if (file == null)
 			return false;
@@ -92,20 +96,25 @@ public class ProblemDAOImpl implements ProblemDAO {
 	}
 
 	public boolean loadAll() {
-		
+
 		return loadTestPlan() && loadTestCases() && loadStatement();
 	}
 
 	public File loadFile(String totalPath) {
-		
-		File file = new File(totalPath);
-		if (!file.isFile())
+
+		File file = null;
+		try {
+			file = new File(totalPath);
+			if (!file.isFile())
+				return null;
+			if (!file.canRead())
+				return null;
+		} catch (Exception e) {
 			return null;
-		if (!file.canRead())
-			return null;
+		}
 		return file;
 	}
-	
+
 	public String getTotalPath() {
 
 		int curId = problem.getId();
