@@ -1,7 +1,0 @@
-<?hh
-
-const string DB_DRIVER = 'mysql';
-const string DB_HOST = 'localhost';
-const string DB_NAME = 'name';
-const string DB_USERNAME = 'username';
-const string DB_PASSWORD = 'password';
