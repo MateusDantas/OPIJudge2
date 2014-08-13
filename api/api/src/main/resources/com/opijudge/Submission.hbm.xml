@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="com.opijudge.models.Submission" table="SUBMISSION">
+		<id name="id" type="int">
+			<column name="ID" not-null="true" unique="true" />
+			<generator class="identity" />
+		</id>
+		<property name="problemId" type="int" not-null="true">
+			<column name="PROBLEMID" />
+		</property>
+		<property name="userId" type="int" not-null="true">
+			<column name="USERID" />
+		</property>
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+		<property name="points" type="int">
+			<column name="POINTS" />
+		</property>
+		<property name="time" type="long">
+			<column name="TIME" />
+		</property>
+		<property name="memory" type="long">
+			<column name="MEMORY" />
+		</property>
+		<property name="language" type="java.lang.String" not-null="true">
+			<column name="LANGUAGE" />
+		</property>
+		<property name="date" type="java.util.Date">
+			<column name="DATE" />
+		</property>
+	</class>
+</hibernate-mapping>
