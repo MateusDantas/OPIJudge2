@@ -61,6 +61,15 @@ public class UserController {
 				1);
 	}
 
+	public static int getUserAccessLevel(String username) {
+		
+		User user = getUserByUsername(username);
+		if (user == null)
+			return INVALID_USER;
+		
+		return user.getAccessLevel();
+	}
+	
 	public static User getUserById(int id) {
 
 		List <User> list = getUserByArgument("ID", id);

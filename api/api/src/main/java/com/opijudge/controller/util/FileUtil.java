@@ -9,12 +9,9 @@ import java.io.OutputStream;
 public class FileUtil {
 
 
-	public static File convertToFile(InputStream inputStream, FormDataContentDisposition fileDetail, String basePath) {
+	public static File convertToFile(InputStream inputStream, FormDataContentDisposition fileDetail, String totalPath) {
 		
-		String totPath = basePath;
-		if (!totPath.endsWith("/"))
-			totPath += "/";
-		totPath += fileDetail.getFileName();
+		String totPath = totalPath;
 		
 		saveToFile(inputStream, totPath);
 		
@@ -29,7 +26,10 @@ public class FileUtil {
 			int read = 0;
 			byte[] bytes = new byte[1024];
 			
-			out = new FileOutputStream(new File(fileLocation));
+			File file = new File(fileLocation);
+			file.mkdirs();
+			
+			out = new FileOutputStream(file);
 			while ((read = inputStream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
@@ -44,12 +44,17 @@ public class FileUtil {
 		return true;
 	}
 	
-	public static String getFileExtension(File file) {
+	public static String getFileExtension(String fileName) {
 		
-		String fileName = file.getName();
 		if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
 			return fileName.substring(fileName.lastIndexOf(".") + 1);
 		
 		return "";
+	}
+	
+	public static String getFileExtension(File file) {
+		
+		String fileName = file.getName();
+		return getFileExtension(fileName);
 	}
 }

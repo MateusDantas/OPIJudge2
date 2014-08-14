@@ -8,9 +8,10 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 	private Submission submission = null;
 	private String basePath;
 
-	public SubmissionDAOImpl(Submission submission, String basePath) {
+	public SubmissionDAOImpl(Submission submission, String basePath, File code) {
 		this.setSubmission(submission);
 		this.setBasePath(basePath);
+		this.setCode(code);
 	}
 
 	public SubmissionDAOImpl(File code, Submission submission) {

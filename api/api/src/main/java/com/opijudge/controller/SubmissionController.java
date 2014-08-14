@@ -3,6 +3,8 @@ package com.opijudge.controller;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Problem;
@@ -19,8 +21,9 @@ public class SubmissionController {
 
 	}
 
-	public int makeSubmission(int problemId, String username, String token,
-			InputStream inputStream, FormDataContentDisposition fileDetail) {
+	public static int makeSubmission(int problemId, String username,
+			String token, InputStream inputStream,
+			FormDataContentDisposition fileDetail) {
 
 		try {
 			if (!AuthTokenManager.isUserAuthentic(token, username))
@@ -34,8 +37,13 @@ public class SubmissionController {
 			if (user.getId() < 1)
 				return INVALID_USER;
 
-			File file = FileUtil.convertToFile(inputStream, fileDetail,
-					SUBMISSION_PATH + String.valueOf(user.getId()));
+			File file = FileUtil.convertToFile(
+					inputStream,
+					fileDetail,
+					SUBMISSION_PATH
+							+ String.valueOf(user.getId())
+							+ "." + FileUtil.getFileExtension(fileDetail
+									.getFileName()));
 
 			if (!file.isFile() || !file.canRead())
 				return INVALID_FILE;
@@ -50,7 +58,9 @@ public class SubmissionController {
 				return INVALID_PROBLEM;
 
 			Submission submission = new Submission(problemId, user.getId(),
-					FileUtil.getFileExtension(file), new Date());
+					FileUtil.getFileExtension(fileDetail.getFileName()),
+					new Date());
+
 			if (!submission.saveToDatabase())
 				return INTERNAL_ERROR;
 
@@ -90,5 +100,53 @@ public class SubmissionController {
 		}
 
 		return OK;
+	}
+
+	public static List<Submission> getSubmissionsByUserInProblem(int userId,
+			int problemId) {
+
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
+		mapKeys.put("PROBLEMID", problemId);
+		mapKeys.put("USERID", problemId);
+
+		return getSubmissionsByProperty(mapKeys);
+	}
+
+	public static List<Submission> getSubmissionsByProblem(int problemId) {
+
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
+		mapKeys.put("PROBLEMID", problemId);
+
+		return getSubmissionsByProperty(mapKeys);
+	}
+
+	public static List<Submission> getSubmissionsByUser(int userId) {
+
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
+		mapKeys.put("USERID", userId);
+
+		return getSubmissionsByProperty(mapKeys);
+	}
+
+	public static <T> List<Submission> getSubmissionsByProperty(
+			HashMap<String, T> mapKeys) {
+
+		try {
+
+			if (mapKeys == null)
+				return null;
+
+			Submission submission = new Submission();
+
+			@SuppressWarnings("unchecked")
+			List<Submission> list = (List<Submission>) submission
+					.getAllByProperty(mapKeys);
+
+			return list;
+
+		} catch (Exception e) {
+
+			return null;
+		}
 	}
 }

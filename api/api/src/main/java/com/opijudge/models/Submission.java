@@ -9,6 +9,10 @@ public class Submission extends Entity {
 	private String language;
 	private Date date;
 
+	public Submission() {
+		
+	}
+	
 	public Submission(int id) {
 
 		this.setId(id);

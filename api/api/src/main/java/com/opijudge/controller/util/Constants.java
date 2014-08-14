@@ -29,6 +29,11 @@ public class Constants {
 	public static final int INVALID_PROBLEM = 32;
 	public static final String SUBMISSION_PATH = "/var/codes-opijudge/";
 	public static final long LIMIT_SUBMISSION_SIZE = 10485760L;
-	
+	/*
+	 * 4. Problems Constants
+	 */
+	public static final int INVALID_PROBLEM_NAME = 41;
+	public static final String PROBLEM_PATH = "/var/problems-opijudge/";
+	public static final long LIMIT_PROBLEM_SIZE = 10L * 10485760L;
 	
 }
