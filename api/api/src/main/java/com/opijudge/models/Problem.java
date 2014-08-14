@@ -5,6 +5,10 @@ public class Problem extends Entity {
 	private int id, problemType;
 	private String problemName;
 
+	public Problem() {
+		
+	}
+	
 	public Problem(int id) {
 		this.setId(id);
 	}

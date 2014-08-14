@@ -29,7 +29,7 @@ public class AuthTokenManager {
 		removeExpiredTokens();
 	}
 	
-	protected static boolean isUserAuthentic(String token, String username) {
+	public static boolean isUserAuthentic(String token, String username) {
 		
 		if (!isValidToken(token)) {
 			return false;
@@ -40,7 +40,7 @@ public class AuthTokenManager {
 		return false;
 	}
 	
-	protected static void addToken(String token, AuthToken userToken) {
+	public static void addToken(String token, AuthToken userToken) {
 		
 		synchronized (tokensMap) {
 			tokensMap.put(token, userToken);
@@ -50,29 +50,29 @@ public class AuthTokenManager {
 		}
 	}
 	
-	protected static void removeAuthToken(String token) {
+	public static void removeAuthToken(String token) {
 		
 		synchronized (tokensMap) {
 			tokensMap.remove(token);
 		}
 	}
 	
-	protected static void removeUserToken(String username) {
+	public static void removeUserToken(String username) {
 		
 		synchronized (usersTokens) {
 			usersTokens.remove(username);
 		}
 	}
 	
-	protected static AuthToken getAuthToken(String token) {
+	public static AuthToken getAuthToken(String token) {
 		
 		synchronized (tokensMap) {
 			return tokensMap.get(token);
 		}
 	}
 	
-	protected static String getTokenUser(String username) {
-		
+	public static String getTokenUser(String username) {
+
 		synchronized (usersTokens) {
 			return usersTokens.get(username);
 		}
@@ -107,7 +107,7 @@ public class AuthTokenManager {
 		}
 	}
 	
-	protected static boolean isValidToken(String token) {
+	public static boolean isValidToken(String token) {
 		
 		AuthToken authToken = getAuthToken(token);
 		if (authToken == null) {

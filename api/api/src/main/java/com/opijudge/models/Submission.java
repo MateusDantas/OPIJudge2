@@ -26,6 +26,14 @@ public class Submission extends Entity {
 		this.setLanguage(language);
 		this.setDate(date);
 	}
+	
+	public Submission(int problemId, int userId, String language, Date date) {
+
+		this.setProblemId(problemId);
+		this.setUserId(userId);
+		this.setLanguage(language);
+		this.setDate(date);
+	}
 
 	public int getPoints() {
 		return points;

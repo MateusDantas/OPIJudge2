@@ -2,6 +2,8 @@ package com.opijudge.controller.validate;
 
 import java.util.regex.*;
 
+import com.opijudge.models.util.BCrypt;
+
 public class UserValidate {
 
 	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -25,5 +27,10 @@ public class UserValidate {
 	public static boolean isPasswordValid(String password) {
 		
 		return password.length() > 5 && password.length() <= 20;
+	}
+
+	public static boolean checkPassword(String textPassword, String hashedPassword) {
+		
+		return BCrypt.checkpw(textPassword, hashedPassword);
 	}
 }
