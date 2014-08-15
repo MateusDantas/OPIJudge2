@@ -41,6 +41,7 @@ public class UserController {
 
 		User user = new User(name, username, password, email, accessLevel,
 				isBlocked);
+		
 		if (!user.saveToDatabase())
 			return INTERNAL_ERROR;
 
