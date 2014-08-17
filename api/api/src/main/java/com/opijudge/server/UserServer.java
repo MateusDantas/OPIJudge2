@@ -33,7 +33,12 @@ public class UserServer {
 	public UserResponse loginUser(@QueryParam("username") String username,
 			@QueryParam("password") String password) {
 
-		int responseStatus = UserController.loginUser(username, password);
+		int responseStatus;
+		if (AuthTokenManager.getTokenUser(username) != null)
+			responseStatus = USER_ALREADY_IN;
+		else
+			responseStatus = UserController.loginUser(username, password);
+
 		User user = UserController.getUserByUsername(username);
 		String token = AuthTokenManager.getTokenUser(username);
 
@@ -49,6 +54,9 @@ public class UserServer {
 	public int logoutUser(@QueryParam("username") String username,
 			@QueryParam("token") String token) {
 
+		if (!AuthTokenManager.isUserAuthentic(token, username))
+			return UNAUTHORIZED;
+
 		int responseStatus = UserController.logoutUser(username, token);
 
 		return responseStatus;
@@ -61,9 +69,25 @@ public class UserServer {
 			@QueryParam("token") String token,
 			@QueryParam("new_password") String newPassword) {
 
-		int responseStatus = UserController.changePassword(username, newPassword, token);
-		
+		if (!AuthTokenManager.isUserAuthentic(token, username))
+			return UNAUTHORIZED;
+
+		int responseStatus = UserController.changePassword(username,
+				newPassword, token);
+
 		return responseStatus;
+	}
+
+	@Path("/getuseraccesslevel")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public int getUserAccessLevel(@QueryParam("username") String username,
+			@QueryParam("token") String token) {
+
+		if (!AuthTokenManager.isUserAuthentic(token, username))
+			return UNAUTHORIZED;
+	
+		return UserController.getUserAccessLevel(username);
 	}
 
 	@Path("/getuserbyid")

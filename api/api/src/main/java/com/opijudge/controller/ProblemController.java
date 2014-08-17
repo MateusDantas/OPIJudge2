@@ -10,6 +10,7 @@ import com.opijudge.controller.util.FileUtil;
 import com.opijudge.controller.util.ZipUtil;
 import com.opijudge.controller.validate.ProblemValidate;
 import com.opijudge.models.Problem;
+import com.opijudge.models.ProblemDAOImpl;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 
 import static com.opijudge.controller.util.Constants.*;
@@ -112,5 +113,21 @@ public class ProblemController {
 
 			return null;
 		}
+	}
+	
+	public static File getProblemStatement(int problemId) {
+		
+		Problem problem = getProblemById(problemId);
+
+		if (problem == null)
+			return null;
+
+		String problemPath = PROBLEM_PATH;
+		
+		ProblemDAOImpl problemDAO = new ProblemDAOImpl(problem, problemPath + "statement.pdf");
+		if (!problemDAO.loadStatement())
+			return null;
+		
+		return problemDAO.getStatement();
 	}
 }

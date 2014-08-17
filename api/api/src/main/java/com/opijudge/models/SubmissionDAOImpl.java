@@ -19,6 +19,11 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 		this.setSubmission(submission);
 	}
 
+	public SubmissionDAOImpl(Submission submission, String basePath) {
+		this.setSubmission(submission);
+		this.setBasePath(basePath);
+	}
+	
 	public boolean saveCode() {
 
 		return saveFile(code, getTotalPath());

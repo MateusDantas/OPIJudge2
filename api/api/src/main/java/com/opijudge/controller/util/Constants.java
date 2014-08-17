@@ -12,21 +12,22 @@ public class Constants {
 	/*
 	 * 2. User Constants
 	 */
-	public static final int USER_ACCESS_LEVEL = 0;
-	public static final int ADMIN_ACCESS_LEVEL = 1;
-	public static final int INVALID_NAME = 20;
-	public static final int INVALID_USERNAME = 21;
-	public static final int INVALID_PASSWORD = 22;
-	public static final int INVALID_EMAIL = 23;
-	public static final int USERNAME_EXISTS = 24;
-	public static final int EMAIL_EXISTS = 25;
-	public static final int USER_ALREADY_IN = 26;
-	public static final int INVALID_LOGIN = 27;
+	public static final int USER_ACCESS_LEVEL = 20;
+	public static final int ADMIN_ACCESS_LEVEL = 21;
+	public static final int INVALID_NAME = 22;
+	public static final int INVALID_USERNAME = 23;
+	public static final int INVALID_PASSWORD = 24;
+	public static final int INVALID_EMAIL = 25;
+	public static final int USERNAME_EXISTS = 26;
+	public static final int EMAIL_EXISTS = 27;
+	public static final int USER_ALREADY_IN = 28;
+	public static final int INVALID_LOGIN = 29;
 	/*
 	 * 3. Submission Constants
 	 */
 	public static final int INVALID_USER = 31;
 	public static final int INVALID_PROBLEM = 32;
+	public static final int INVALID_SUBMISSION = 33;
 	public static final String SUBMISSION_PATH = "/var/codes-opijudge/";
 	public static final long LIMIT_SUBMISSION_SIZE = 10485760L;
 	/*

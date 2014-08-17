@@ -118,9 +118,6 @@ public class UserController {
 	
 	public static int loginUser(String username, String password) {
 		
-		if (AuthTokenManager.getTokenUser(username) != null)
-			return USER_ALREADY_IN;
-		
 		User user = getUserByUsername(username);
 		
 		if (user == null)
@@ -138,9 +135,6 @@ public class UserController {
 	
 	public static int logoutUser(String username, String token) {
 		
-		if (!AuthTokenManager.isUserAuthentic(token, username))
-			return UNAUTHORIZED;
-		
 		AuthTokenManager.removeAuthToken(token);
 		AuthTokenManager.removeUserToken(username);
 		
@@ -148,9 +142,6 @@ public class UserController {
 	}
 	
 	public static int changePassword(String username, String newPassword, String token) {
-		
-		if (!AuthTokenManager.isUserAuthentic(token, username))
-			return UNAUTHORIZED;
 		
 		User user = getUserByUsername(username);
 		user.setPassword(newPassword);

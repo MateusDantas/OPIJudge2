@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Problem;
+import com.opijudge.models.ProblemDAOImpl;
 import com.opijudge.models.Submission;
+import com.opijudge.models.SubmissionDAOImpl;
 import com.opijudge.models.User;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.opijudge.controller.util.FileUtil;
@@ -42,7 +44,8 @@ public class SubmissionController {
 					fileDetail,
 					SUBMISSION_PATH
 							+ String.valueOf(user.getId())
-							+ "." + FileUtil.getFileExtension(fileDetail
+							+ "."
+							+ FileUtil.getFileExtension(fileDetail
 									.getFileName()));
 
 			if (!file.isFile() || !file.canRead())
@@ -128,6 +131,19 @@ public class SubmissionController {
 		return getSubmissionsByProperty(mapKeys);
 	}
 
+	public static Submission getSubmissionById(int submissionId) {
+
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
+		mapKeys.put("id", submissionId);
+
+		List<Submission> list = getSubmissionsByProperty(mapKeys);
+
+		if (list == null || list.size() == 0)
+			return null;
+
+		return list.get(0);
+	}
+
 	public static <T> List<Submission> getSubmissionsByProperty(
 			HashMap<String, T> mapKeys) {
 
@@ -148,5 +164,22 @@ public class SubmissionController {
 
 			return null;
 		}
+	}
+
+	public static File getSubmissionCode(int submissionId) {
+
+		Submission submission = getSubmissionById(submissionId);
+
+		if (submission == null)
+			return null;
+
+		String submissionPath = SUBMISSION_PATH;
+
+		SubmissionDAOImpl submissionDAO = new SubmissionDAOImpl(submission, submissionPath);
+		
+		if (!submissionDAO.loadCode())
+			return null;
+
+		return submissionDAO.getCode();
 	}
 }
