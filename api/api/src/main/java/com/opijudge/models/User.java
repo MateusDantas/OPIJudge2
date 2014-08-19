@@ -21,6 +21,7 @@ public class User extends Entity {
 	public User(String name, String username, String password, String email, int accessLevel, int isBlocked) {
 
 		this.setName(name);
+		this.setUsername(username);
 		this.setEmail(email);
 		this.setPassword(password);
 		this.setHashedPassword(hashPassword(password));

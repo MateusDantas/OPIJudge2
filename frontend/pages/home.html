@@ -1,0 +1,27 @@
+
+<form class="form-signin" action="process.php" method="POST">
+  <h2 class="form-signin-heading" style="text-align: center">Sign In!</h2>
+  <br>
+  <input type="text" class="form-control" name="username" placeholder="Login" autofocus>
+  <input type="password" class="form-control" name="password" placeholder="Password">
+  <div id="register-wrap"></div>
+  <br>
+  <script type="text/javascript"
+	  src="http://www.google.com/recaptcha/api/challenge?k=6LcPmOgSAAAAAOyyankpkLNDfMnNBnXTwaZOMTPh">
+  </script>
+  <noscript>
+    
+    <iframe src="http://www.google.com/recaptcha/api/noscript?k=6LcPmOgSAAAAAOyyankpkLNDfMnNBnXTwaZOMTPh"
+	    height="300" width="500" frameborder="0"></iframe><br>
+    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
+    </textarea>
+    <input type="hidden" name="recaptcha_response_field"
+	   value="manual_challenge">
+  </noscript>
+  <label class="checkbox">
+    <input type="checkbox" value="remember-me" name="rememberme"> Remember me
+  </label>
+  <br>
+  <button class="btn btn-lg btn-primary btn-block" type="submit" name="login">Sign in</button>
+  <button class="btn btn-lg btn-primary btn-block" type="button" id="register" name="register-wrap">Register</button>
+</form>

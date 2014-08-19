@@ -24,6 +24,7 @@ public class Entity {
 			
 		} catch (Exception ex) {
 
+			ex.printStackTrace();
 			return false;
 		} finally {
 			
@@ -90,11 +91,13 @@ public class Entity {
 			for (String key : mapKeys.keySet()) {
 				criteria.add(Restrictions.eq(key, mapKeys.get(key)));
 			}
+			System.out.printf("Criteria = %s\n", criteria.toString());
 			
 			return (List<?>) criteria.list();
 		
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			return null;
 		} finally {
 			

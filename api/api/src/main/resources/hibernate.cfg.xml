@@ -20,9 +20,9 @@ connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.c3p0.idle_test_period">1000</property>
 		<property name="hibernate.c3p0.validate">true</property>
-		<property name="hibernate.connection.provider_class">org.hibernate.service.
-			jdbc.connections.internal.C3P0ConnectionProvider</property>
 
-		<!--  <mapping resource="com/javacodegeeks/Student.hbm.xml"></mapping>-->
+		<mapping resource="com/opijudge/Problem.hbm.xml"></mapping>
+		<mapping resource="com/opijudge/User.hbm.xml"></mapping>
+		<mapping resource="com/opijudge/Submission.hbm.xml"></mapping>
 	</session-factory>
 </hibernate-configuration>

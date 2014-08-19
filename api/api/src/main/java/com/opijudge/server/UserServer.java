@@ -13,8 +13,15 @@ import static com.opijudge.controller.util.Constants.*;
 @Path("/users")
 public class UserServer {
 
+	@Path("/hello")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String helloWorld() {
+		return "hello";
+	}
+	
 	@Path("/createuser")
-	@POST
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public int createUser(@QueryParam("name") String name,
 			@QueryParam("username") String username,
@@ -34,14 +41,20 @@ public class UserServer {
 			@QueryParam("password") String password) {
 
 		int responseStatus;
-		if (AuthTokenManager.getTokenUser(username) != null)
+		if (AuthTokenManager.getTokenUser(username) != null) {
 			responseStatus = USER_ALREADY_IN;
-		else
+			return new UserResponse(null, null, responseStatus);
+		} else
 			responseStatus = UserController.loginUser(username, password);
 
 		User user = UserController.getUserByUsername(username);
 		String token = AuthTokenManager.getTokenUser(username);
 
+		if (responseStatus == UNAUTHORIZED) {
+			user = null;
+			token = null;
+		}
+		
 		UserResponse userResponse = new UserResponse(user, token,
 				responseStatus);
 

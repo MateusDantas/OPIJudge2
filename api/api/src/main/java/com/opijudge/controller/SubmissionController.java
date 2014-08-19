@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Problem;
-import com.opijudge.models.ProblemDAOImpl;
 import com.opijudge.models.Submission;
 import com.opijudge.models.SubmissionDAOImpl;
 import com.opijudge.models.User;
@@ -109,8 +108,8 @@ public class SubmissionController {
 			int problemId) {
 
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
-		mapKeys.put("PROBLEMID", problemId);
-		mapKeys.put("USERID", problemId);
+		mapKeys.put("problemId", problemId);
+		mapKeys.put("userId", problemId);
 
 		return getSubmissionsByProperty(mapKeys);
 	}
@@ -118,7 +117,7 @@ public class SubmissionController {
 	public static List<Submission> getSubmissionsByProblem(int problemId) {
 
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
-		mapKeys.put("PROBLEMID", problemId);
+		mapKeys.put("problemId", problemId);
 
 		return getSubmissionsByProperty(mapKeys);
 	}
@@ -126,7 +125,7 @@ public class SubmissionController {
 	public static List<Submission> getSubmissionsByUser(int userId) {
 
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
-		mapKeys.put("USERID", userId);
+		mapKeys.put("userId", userId);
 
 		return getSubmissionsByProperty(mapKeys);
 	}

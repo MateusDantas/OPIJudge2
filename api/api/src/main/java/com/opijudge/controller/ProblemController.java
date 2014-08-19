@@ -73,7 +73,7 @@ public class ProblemController {
 	public static Problem getProblemById(int problemId) {
 
 		HashMap <String, Integer> mapKeys = new HashMap<String, Integer>();
-		mapKeys.put("ID", problemId);
+		mapKeys.put("id", problemId);
 		
 		List<Problem> list = getProblemsByProperty(mapKeys);
 		
@@ -86,7 +86,7 @@ public class ProblemController {
 	public static List<Problem> getProblemsByName(String problemName) {
 		
 		HashMap <String, String> mapKeys = new HashMap<String, String>();
-		mapKeys.put("PROBLEMNAME", problemName);
+		mapKeys.put("problemName", problemName);
 		
 		List<Problem> list = getProblemsByProperty(mapKeys);
 		

@@ -41,7 +41,8 @@ public class UserController {
 
 		User user = new User(name, username, password, email, accessLevel,
 				isBlocked);
-		
+		System.out.println("User " +  username);
+		System.out.println("User " +  user.getUsername());
 		if (!user.saveToDatabase())
 			return INTERNAL_ERROR;
 
@@ -73,7 +74,7 @@ public class UserController {
 	
 	public static User getUserById(int id) {
 
-		List <User> list = getUserByArgument("ID", id);
+		List <User> list = getUserByArgument("id", id);
 		if (list == null || list.size() == 0)
 			return null;
 		
@@ -82,7 +83,7 @@ public class UserController {
 
 	public static User getUserByUsername(String username) {
 
-		List<User> list =  getUserByArgument("USERNAME", username);
+		List<User> list =  getUserByArgument("username", username);
 		if (list == null || list.size() == 0)
 			return null;
 		
@@ -91,7 +92,7 @@ public class UserController {
 
 	public static User getUserByEmail(String email) {
 
-		List<User> list = getUserByArgument("EMAIL", email);
+		List<User> list = getUserByArgument("email", email);
 		if (list == null || list.size() == 0)
 			return null;
 		
