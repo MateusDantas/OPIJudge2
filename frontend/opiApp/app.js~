@@ -1,0 +1,49 @@
+(function() {
+
+    var opiApp = angular.module('opiApp', ['ngRoute']);
+
+    opiApp.config(function($routeProvider) {
+
+	$routeProvider
+	    .when('/', {
+		templateUrl : 'opiApp/views/home.html',
+		controller : 'mainController'
+	    })
+	
+	    .when('/login', {
+		templateUrl : 'opiApp/views/login.html',
+		controller : 'loginController'
+	    })
+	
+	    .when('/register', {
+		templateUrl : 'opiApp/views/register.html',
+		controller : 'registerController'
+	    })
+	
+	    .when('submissions', {
+		templateUrl : 'opiApp/views/submissions.html',
+		controller : 'submissionsController'
+	    })
+	
+	    .when('ranking', {
+		templateUrl : 'opiApp/views/ranking.html',
+		controller : 'rankingController'
+	    })
+	
+	    .when('profile', {
+		templateUrl : 'opiApp/views/profile.html',
+		controller : 'profileController'
+	    })
+	
+	    .when('server', {
+		templateUrl : 'opiApp/views/server.html',
+		controller : 'serverController'
+	    })
+
+	    .otherwise({ redirectTo: '/' });
+	
+	
+    });
+
+}());
+
