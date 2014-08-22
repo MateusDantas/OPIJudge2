@@ -5,10 +5,7 @@ import java.util.Date;
 import com.opijudge.models.Submission;
 
 public class SubmissionResponse {
-	/*
-	 * private int id, problemId, userId, status, points; private long time,
-	 * memory; private String language; private Date date;
-	 */
+
 	private int id;
 	private int problemId;
 	private int userId;

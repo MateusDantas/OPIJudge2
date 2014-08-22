@@ -92,6 +92,15 @@ public class ProblemController {
 		
 		return list;
 	}
+	
+	public static List<Problem> getAllProblems() {
+		
+		HashMap<String, String> mapKeys = new HashMap<String, String>();
+		
+		List<Problem> list = getProblemsByProperty(mapKeys);
+		
+		return list;
+	}
 
 	public static <T> List<Problem> getProblemsByProperty(
 			HashMap<String, T> mapKeys) {

@@ -1,0 +1,13 @@
+(function() {
+
+    var userFactory = function($http) {
+	
+	var basePath = opiApp.CONSTANTS.BASE_PATH;
+	var factory = {};
+	
+	factory.getUserAccessLevel = function (username_, token_) {
+	    return $http.post(basePath + obiApp.CONSTANTS.
+	};
+    };
+
+}();

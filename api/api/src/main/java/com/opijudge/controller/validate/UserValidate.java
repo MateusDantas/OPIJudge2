@@ -41,6 +41,14 @@ public class UserValidate {
 
 	public static boolean checkPassword(String textPassword, String hashedPassword) {
 		
-		return BCrypt.checkpw(textPassword, hashedPassword);
+		boolean result;
+		try {
+			result = BCrypt.checkpw(textPassword, hashedPassword);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+		
+		return result;
 	}
 }

@@ -1,0 +1,26 @@
+<div class="view">
+	<div class="container">
+		<div class="alert alert-danger" style="margin-top: 20px;" ng-model="returnMessage" ng-show="returnMessage !== ''">
+			<center ng-bind="returnMessage"></center>
+		</div>
+		<form class="form-signin" action="" ng-submit="register(data)"
+			novalidate>
+			<h2 class="form-signin-heading" style="text-align: center">Register!</h2>
+			<br> 
+			<input type="text" class="form-control" name="name"
+				ng-model="data.name" placeholder="Name" autofocus> 
+			<input
+				type="text" class="form-control" name="email" ng-model="data.email"
+				placeholder="Email"> 
+			<input type="text" class="form-control"
+				name="username" ng-model="data.username" placeholder="Username">
+			<input type="password" class="form-control" name="password"
+				ng-model="data.password" placeholder="Password"> <br> <label
+				class="checkbox">
+			</label> <br>
+			<button class="btn btn-lg btn-primary btn-block" type="submit"
+				name="login">Register</button>
+			<a class="btn btn-lg btn-primary btn-block" href="#/login">Login</a>
+		</form>
+	</div>
+</div>

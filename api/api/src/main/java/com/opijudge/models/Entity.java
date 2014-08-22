@@ -85,7 +85,7 @@ public class Entity {
 		try {
 			session = getSession();
 			session.beginTransaction();
-			
+			System.out.println("aqui");
 			Criteria criteria = session.createCriteria(this.getClass());
 		
 			for (String key : mapKeys.keySet()) {

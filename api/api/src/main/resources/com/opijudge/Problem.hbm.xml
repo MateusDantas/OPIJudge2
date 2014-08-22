@@ -6,10 +6,10 @@
 			<column name="ID" not-null="true" unique="true" />
 			<generator class="identity" />
 		</id>
-		<property name="problemType" type="int" not-null="true">
+		<property name="problemType" type="int">
 			<column name="PROBLEMTYPE" />
 		</property>
-		<property name="problemName" type="java.lang.String" not-null="true">
+		<property name="problemName" type="java.lang.String">
 			<column name="PROBLEMNAME" />
 		</property>
 	</class>

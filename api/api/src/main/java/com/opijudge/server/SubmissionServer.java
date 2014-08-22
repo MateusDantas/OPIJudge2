@@ -19,28 +19,50 @@ import com.opijudge.controller.UserController;
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Submission;
 import com.opijudge.models.User;
+import com.opijudge.server.consume.SubmissionConsumes;
 import com.opijudge.server.response.ListResponse;
 import com.opijudge.server.response.SubmissionResponse;
+import com.opijudge.server.response.UnauthorizedException;
+import com.opijudge.server.util.SubmissionResponseUtil;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 import static com.opijudge.controller.util.Constants.*;
 
+/**
+ */
 @Path("/submission")
 public class SubmissionServer {
 
+	/**
+	 * Method makeSubmission.
+	 * 
+	 * @param problemId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @param inputStream
+	 *            InputStream
+	 * @param contentDispositionHeader
+	 *            FormDataContentDisposition
+	 * @return int
+	 */
 	@POST
 	@Path("/makesubmission")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int makeSubmission(
-			@QueryParam("problemid") int problemId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token,
+			@FormDataParam("problemid") int problemId,
+			@FormDataParam("username") String username,
+			@FormDataParam("token") String token,
 			@FormDataParam("file") InputStream inputStream,
 			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
 
+		System.out.println("SUBMIT: " +  contentDispositionHeader.getFileName());
+		System.out.println("USERNAME: " + username);
 		if (!AuthTokenManager.isUserAuthentic(token, username))
 			return UNAUTHORIZED;
 
@@ -50,28 +72,38 @@ public class SubmissionServer {
 		return statusCode;
 	}
 
+	/**
+	 * Method getSubmissionById.
+	 * 
+	 * @param submissionId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return SubmissionResponse
+	 */
 	@POST
 	@Path("/getsubmissionbyid")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public SubmissionResponse getSubmissionById(
-			@QueryParam("submissionid") int submissionId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+			SubmissionConsumes submissionConsumes) {
 
 		int responseStatus;
-		if (!AuthTokenManager.isUserAuthentic(token, username)) {
-			responseStatus = UNAUTHORIZED;
-			return new SubmissionResponse(null, responseStatus);
-		}
+		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
+				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
 
 		Submission submission = SubmissionController
-				.getSubmissionById(submissionId);
+				.getSubmissionById(submissionConsumes.getSubmissionid());
 
 		if (submission == null)
 			responseStatus = INVALID_SUBMISSION;
 		else {
 			int userId = submission.getUserId();
-			User userQuery = UserController.getUserByUsername(username);
+			User userQuery = UserController
+					.getUserByUsername(submissionConsumes.getUsername());
 
 			if (userQuery.getAccessLevel() != ADMIN_ACCESS_LEVEL
 					&& userQuery.getId() != userId)
@@ -83,120 +115,200 @@ public class SubmissionServer {
 		return new SubmissionResponse(submission, responseStatus);
 	}
 
+	/**
+	 * Method getSubmissionsByUser.
+	 * 
+	 * @param userId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return ListResponse<Submission>
+	 */
 	@POST
 	@Path("/getsubmissionsbyuser")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ListResponse<Submission> getSubmissionsByUser(
-			@QueryParam("userid") int userId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public ListResponse<SubmissionResponse> getSubmissionsByUser(
+			SubmissionConsumes submissionConsumes) {
 
 		int responseStatus;
 
-		User user = UserController.getUserByUsername(username);
+		User user = UserController.getUserByUsername(submissionConsumes
+				.getUsername());
 
-		if (!AuthTokenManager.isUserAuthentic(token, username)
-				|| (user.getAccessLevel() != ADMIN_ACCESS_LEVEL && userId != user
-						.getId())) {
+		if (user == null
+				|| !AuthTokenManager.isUserAuthentic(
+						submissionConsumes.getToken(),
+						submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL
+				&& submissionConsumes.getUserid() != user.getId()) {
 			responseStatus = UNAUTHORIZED;
-			return new ListResponse<Submission>(responseStatus);
+			return new ListResponse<SubmissionResponse>(responseStatus);
 		}
 
 		List<Submission> list = SubmissionController
-				.getSubmissionsByUser(userId);
+				.getSubmissionsByUser(submissionConsumes.getUserid());
 
-		if (list == null)
+		List<SubmissionResponse> listResponse = SubmissionResponseUtil
+				.convertList(list);
+
+		if (listResponse == null)
 			responseStatus = INVALID_USER;
 		else
 			responseStatus = OK;
 
-		return new ListResponse<Submission>(list, responseStatus);
+		return new ListResponse<SubmissionResponse>(listResponse,
+				responseStatus);
 	}
 
+	/**
+	 * Method getSubmissionsByProblem.
+	 * 
+	 * @param problemId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return ListResponse<Submission>
+	 */
 	@POST
 	@Path("/getsubmissionsbyproblem")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ListResponse<Submission> getSubmissionsByProblem(
-			@QueryParam("problemid") int problemId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public ListResponse<SubmissionResponse> getSubmissionsByProblem(
+			SubmissionConsumes submissionConsumes) {
 
 		int responseStatus;
 
-		User user = UserController.getUserByUsername(username);
+		User user = UserController.getUserByUsername(submissionConsumes
+				.getUsername());
 
-		if (!AuthTokenManager.isUserAuthentic(token, username)
-				|| user.getAccessLevel() != ADMIN_ACCESS_LEVEL) {
+		if (user == null
+				|| !AuthTokenManager.isUserAuthentic(
+						submissionConsumes.getToken(),
+						submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL) {
 
 			responseStatus = UNAUTHORIZED;
-			return new ListResponse<Submission>(responseStatus);
+			return new ListResponse<SubmissionResponse>(responseStatus);
 		}
 
 		List<Submission> list = SubmissionController
-				.getSubmissionsByProblem(problemId);
+				.getSubmissionsByProblem(submissionConsumes.getProblemid());
 
-		if (list == null)
+		List<SubmissionResponse> listResponse = SubmissionResponseUtil
+				.convertList(list);
+
+		if (listResponse == null)
 			responseStatus = INVALID_PROBLEM;
 		else
 			responseStatus = OK;
 
-		return new ListResponse<Submission>(list, responseStatus);
+		return new ListResponse<SubmissionResponse>(listResponse,
+				responseStatus);
 	}
 
+	/**
+	 * Method getSubmissionsByUserInProblem.
+	 * 
+	 * @param userId
+	 *            int
+	 * @param problemId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return ListResponse<Submission>
+	 */
 	@POST
 	@Path("/getsubmissionsbyuser_in_problem")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ListResponse<Submission> getSubmissionsByUserInProblem(
-			@QueryParam("userid") int userId,
-			@QueryParam("problemid") int problemId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public ListResponse<SubmissionResponse> getSubmissionsByUserInProblem(
+			SubmissionConsumes submissionConsumes) {
 
 		int responseStatus;
-		User user = UserController.getUserByUsername(username);
+		User user = UserController.getUserByUsername(submissionConsumes
+				.getUsername());
 
-		if (!AuthTokenManager.isUserAuthentic(token, username)
-				|| (user.getAccessLevel() != ADMIN_ACCESS_LEVEL && user.getId() != userId)) {
+		if (user == null
+				|| !AuthTokenManager.isUserAuthentic(
+						submissionConsumes.getToken(),
+						submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL
+				&& user.getId() != submissionConsumes.getUserid()) {
 
 			responseStatus = UNAUTHORIZED;
-			return new ListResponse<Submission>(responseStatus);
+			return new ListResponse<SubmissionResponse>(responseStatus);
 		}
 
+		System.out.println(submissionConsumes.getUserid());
 		List<Submission> list = SubmissionController
-				.getSubmissionsByUserInProblem(userId, problemId);
+				.getSubmissionsByUserInProblem(submissionConsumes.getUserid(),
+						submissionConsumes.getProblemid());
+		System.out.println(list.size());
 
-		if (list == null)
+		List<SubmissionResponse> listResponse = SubmissionResponseUtil
+				.convertList(list);
+
+		if (listResponse == null)
 			responseStatus = INVALID_SUBMISSION;
 		else
 			responseStatus = OK;
 
-		return new ListResponse<Submission>(list, responseStatus);
+		return new ListResponse<SubmissionResponse>(listResponse,
+				responseStatus);
 	}
 
+	/**
+	 * Method getUserCode.
+	 * 
+	 * @param submissionId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return Response
+	 */
 	@GET
 	@Path("/getusercode")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("text/plain")
-	public Response getUserCode(@QueryParam("submissionid") int submissionId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public Response getUserCode(SubmissionConsumes submissionConsumes) {
 
-		if (!AuthTokenManager.isUserAuthentic(token, username))
+		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
+				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		Submission submission = SubmissionController
+				.getSubmissionById(submissionConsumes.getSubmissionid());
+		User user = UserController.getUserByUsername(submissionConsumes
+				.getUsername());
+		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL
+				&& user.getId() != submission.getUserId())
 			return Response.status(Status.UNAUTHORIZED).build();
-		
-		Submission submission = SubmissionController.getSubmissionById(submissionId);
-		User user = UserController.getUserByUsername(username);
-		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL && user.getId() != submission.getUserId())
-			return Response.status(Status.UNAUTHORIZED).build();
-		
-		File file = SubmissionController.getSubmissionCode(submissionId);
-		
+
+		File file = SubmissionController.getSubmissionCode(submissionConsumes
+				.getSubmissionid());
+
 		if (file == null)
 			return Response.status(INVALID_SUBMISSION).build();
-		
+
 		ResponseBuilder response = Response.ok((Object) file);
-		
+
 		response.header("Content-Disposition", "attachment; filename=code.txt");
-		
+
 		return response.build();
 	}
 

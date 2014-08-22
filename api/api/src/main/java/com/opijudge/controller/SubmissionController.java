@@ -109,7 +109,7 @@ public class SubmissionController {
 
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
 		mapKeys.put("problemId", problemId);
-		mapKeys.put("userId", problemId);
+		mapKeys.put("userId", userId);
 
 		return getSubmissionsByProperty(mapKeys);
 	}

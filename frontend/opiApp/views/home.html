@@ -1,0 +1,100 @@
+<div class="view">
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">OPI Judge</a>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active "><a href="#" class="opts" name="home">Home</a></li>
+
+					<li><a href="#" class="opts" name="addproblem"
+						ng-show="isUserAdmin()">Add Problem</a></li>
+					<li><a href="#" class="opts" name="judgesettings"
+						ng-show="isUserAdmin()">Judge Settings</a></li>
+					<li><a href="#" class="opts" name="submissions"
+						ng-show="isUserAdmin()">Submissions</a></li>
+					<li><a href="#" class="opts" name="ranking"
+						ng-show="isUserAdmin()">Ranking</a></li>
+
+					<li><a href="" class="opts" ng-click="logoutUser()"><i
+							class="glyphicon glyphicon-off"></i> Logout</a></li>
+
+
+
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="main-content" ng-init="getProblems()">
+		<div class="wrap-sidebar">
+			<div class="navbar navbar-default sidebar-left">
+				<div class="container">
+					<div class="collapse navbar-collapse" ng-model="problems">
+						<ul class="" ng-repeat="problem in problems"
+							style="padding-top: 10px">
+							<a href=""><button type='button'
+									class="{{getClassName($index)}}"
+									ng-click="changeProblemView(problem)">{{problem.problemName}}</button></a>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wrap-centerbar" ng-model="selectedProblem">
+			<div class="navbar navbar-default sidebar-center"
+				style="padding-left: 20px; padding-top: 14px">
+				<h1 style="text-align: center">{{ selectedProblem.problemName
+					}}</h1>
+				<a href=""><button type="button" class="btn btn-success">Download
+						Statement</button></a> <br> <br> <a href="#"><button
+						type="button" class="btn btn-success">Send Clarification</button></a>
+				<br> <br>
+				<form class="form" action="" ng-submit="submitSolution()"
+					enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="statement-file">Solution File</label> 
+						<input type="file" file-model="submissionData.file">
+						<p class="help-block">Upload Your Solution!</p>
+					</div>
+					<button type="submit" class="btn btn-success" name="submitsol">Submit</button>
+				</form>
+				<br> <br> <br>
+				<div class="panel panel-primary" style="width: 98%">
+					<!-- Default panel contents -->
+					<div class="panel-heading" style="text-align: center">Submissions</div>
+
+					<!-- Table -->
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Points</th>
+								<th>Result</th>
+								<th>Time</th>
+								<th>Code</th>
+							</tr>
+						</thead>
+
+						<tbody ng-model="submissions">
+							<tr class="" ng-repeat="submission in submissions">
+							<td>{{ submission.id }}</td>
+							<td>{{ submission.points }}</td>
+							<td>{{ submission.status }}</td>
+							<td>{{ getRealDate(submission.date) }}</td>
+							<td>a</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br>
+			</div>
+		</div>
+	</div>
+</div>

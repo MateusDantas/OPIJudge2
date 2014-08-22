@@ -73,7 +73,10 @@ public class UserController {
 	}
 	
 	public static User getUserById(int id) {
-
+		
+		if (Integer.valueOf(id) == null)
+			return null;
+		
 		List <User> list = getUserByArgument("id", id);
 		if (list == null || list.size() == 0)
 			return null;
@@ -83,6 +86,9 @@ public class UserController {
 
 	public static User getUserByUsername(String username) {
 
+		if (username == null)
+			return null;
+		
 		List<User> list =  getUserByArgument("username", username);
 		if (list == null || list.size() == 0)
 			return null;
@@ -92,6 +98,9 @@ public class UserController {
 
 	public static User getUserByEmail(String email) {
 
+		if (email == null)
+			return null;
+		
 		List<User> list = getUserByArgument("email", email);
 		if (list == null || list.size() == 0)
 			return null;

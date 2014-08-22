@@ -2,6 +2,7 @@ package com.opijudge.server;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -21,17 +22,49 @@ import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Problem;
 import com.opijudge.models.Submission;
 import com.opijudge.models.User;
+import com.opijudge.server.consume.ProblemConsumes;
 import com.opijudge.server.response.ListResponse;
+import com.opijudge.server.response.ProblemResponse;
 import com.opijudge.server.response.SubmissionResponse;
+import com.opijudge.server.response.UnauthorizedException;
+import com.opijudge.server.util.ProblemResponseUtil;
+import com.opijudge.server.util.UserServerValidate;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 import static com.opijudge.controller.util.Constants.*;
 
+/**
+ */
 @Path("/problem")
 public class ProblemServer {
 
+	/**
+	 * Method createProblem.
+	 * 
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @param problemName
+	 *            String
+	 * @param problemType
+	 *            int
+	 * @param testPlanStream
+	 *            InputStream
+	 * @param testPlanDetail
+	 *            FormDataContentDisposition
+	 * @param testCasesStream
+	 *            InputStream
+	 * @param testCasesDetail
+	 *            FormDataContentDisposition
+	 * @param statementStream
+	 *            InputStream
+	 * @param statementDetail
+	 *            FormDataContentDisposition
+	 * @return int
+	 */
 	@POST
 	@Path("/createproblem")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -46,7 +79,15 @@ public class ProblemServer {
 			@FormDataParam("testcases") InputStream testCasesStream,
 			@FormDataParam("testcases") FormDataContentDisposition testCasesDetail,
 			@FormDataParam("statement") InputStream statementStream,
-			@FormDataParam("file") FormDataContentDisposition statementDetail) {
+			@FormDataParam("statement") FormDataContentDisposition statementDetail) {
+
+		if (!AuthTokenManager.isUserAuthentic(token, username))
+			throw new UnauthorizedException();
+
+		if (UserServerValidate.hasAdminPrivileges(token, username))
+			return UNAUTHORIZED;
+
+		System.out.println(username);
 
 		return ProblemController.saveProblem(problemName, problemType,
 				username, token, testPlanStream, testPlanDetail,
@@ -54,17 +95,29 @@ public class ProblemServer {
 				statementDetail);
 	}
 
+	/**
+	 * Method getStatement.
+	 * 
+	 * @param problemId
+	 *            int
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return Response
+	 */
 	@GET
 	@Path("/getproblemstatement")
 	@Produces("application/pdf")
-	public Response getStatement(@QueryParam("problemid") int problemId,
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public Response getStatement(ProblemConsumes problemConsumes) {
 
-		if (!AuthTokenManager.isUserAuthentic(token, username))
-			return Response.status(Status.UNAUTHORIZED).build();
+		if (!AuthTokenManager.isUserAuthentic(problemConsumes.getToken(),
+				problemConsumes.getUsername()))
+			throw new UnauthorizedException();
 
-		File file = ProblemController.getProblemStatement(problemId);
+		File file = ProblemController.getProblemStatement(problemConsumes
+				.getProblemid());
+
 		if (file == null)
 			return Response.status(INVALID_PROBLEM).build();
 
@@ -75,24 +128,37 @@ public class ProblemServer {
 		return response.build();
 	}
 
+	/**
+	 * Method getAllProblems.
+	 * 
+	 * @param username
+	 *            String
+	 * @param token
+	 *            String
+	 * @return ListResponse<Problem>
+	 */
 	@POST
 	@Path("/getallproblems")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ListResponse<Problem> getAllProblems(
-			@QueryParam("username") String username,
-			@QueryParam("token") String token) {
+	public ListResponse<ProblemResponse> getAllProblems(
+			ProblemConsumes problemConsumes) {
 
-		if (!AuthTokenManager.isUserAuthentic(token, username))
-			return new ListResponse<Problem>(UNAUTHORIZED);
+		if (!AuthTokenManager.isUserAuthentic(problemConsumes.getToken(),
+				problemConsumes.getUsername()))
+			throw new UnauthorizedException();
 
-		List<Problem> list = ProblemController.getProblemsByName("*");
-
+		List<Problem> list = ProblemController.getAllProblems();
+		List<ProblemResponse> listResponse = ProblemResponseUtil.convertList(list);
+		
 		int responseStatus;
-		if (list == null)
-			responseStatus = INVALID_PROBLEM;
-		else
-			responseStatus = OK;
 
-		return new ListResponse<Problem>(list, responseStatus);
+		if (listResponse == null)
+			responseStatus = INVALID_PROBLEM;
+		else 
+			responseStatus = OK;
+		
+
+		return new ListResponse<ProblemResponse>(listResponse, responseStatus);
 	}
 }

@@ -6,28 +6,30 @@ public class UserResponse {
 
 	private int id;
 	private int responseStatus;
+	private int accessLevel;
 	private String name;
 	private String username;
 	private String token;
-	
+
 	public UserResponse() {
-		
+
 	}
-	
+
 	public UserResponse(User user, String token, int responseStatus) {
-		
+
 		if (user != null) {
+			this.setAccessLevel(user.getAccessLevel());
 			this.setName(user.getName());
 			this.setUsername(user.getUsername());
 			this.setId(user.getId());
 		}
-		
+
 		this.setToken(token);
 		this.setResponseStatus(responseStatus);
 	}
-	
+
 	public UserResponse(String token, int responseStatus) {
-		
+
 		this.setToken(token);
 		this.setResponseStatus(responseStatus);
 	}
@@ -71,5 +73,13 @@ public class UserResponse {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
+	}
+
 }
