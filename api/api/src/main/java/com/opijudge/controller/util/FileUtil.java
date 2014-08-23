@@ -27,7 +27,8 @@ public class FileUtil {
 			byte[] bytes = new byte[1024];
 			
 			File file = new File(fileLocation);
-			file.mkdirs();
+			file.getParentFile().mkdirs();
+			file.createNewFile();
 			
 			out = new FileOutputStream(file);
 			while ((read = inputStream.read(bytes)) != -1) {

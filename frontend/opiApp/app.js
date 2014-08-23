@@ -2,6 +2,8 @@
 
 	var opiApp = angular.module('opiApp', [ 'ngRoute' ]);
 
+	
+
 	opiApp
 			.config(function($routeProvider) {
 
@@ -18,6 +20,11 @@
 				.when('/register', {
 					templateUrl : 'opiApp/views/register.html',
 					controller : 'RegisterController'
+				})
+
+				.when('/addproblem', {
+					templateUrl : 'opiApp/views/addproblem.html',
+					controller : 'AddProblemController'
 				})
 
 				/*
@@ -48,17 +55,27 @@
 							'authService',
 							function($q, $rootScope, $location, authService) {
 
+								var adminUrls = new Array('obiApp/views/addproblem.html');
+								
 								$rootScope
 										.$on(
 												"$routeChangeStart",
 												function(event, next, current) {
-													console.log(authService.isAuthenticated());
-													if (!authService.isAuthenticated()
+
+													if (!authService
+															.isAuthenticated()
 															&& next.templateUrl !== "opiApp/views/login.html"
 															&& next.templateUrl !== "opiApp/views/register.html") {
-														
+
 														authService
 																.redirectToLogin();
+													}
+
+													if (adminUrls
+															.contains(next.templateUrl)
+															&& !authService
+																	.isUserAdmin()) {
+														$location.path('/home');
 													}
 
 												});

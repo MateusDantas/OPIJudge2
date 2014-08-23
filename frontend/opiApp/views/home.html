@@ -1,36 +1,4 @@
 <div class="view">
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/">OPI Judge</a>
-			</div>
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li class="active "><a href="#" class="opts" name="home">Home</a></li>
-
-					<li><a href="#" class="opts" name="addproblem"
-						ng-show="isUserAdmin()">Add Problem</a></li>
-					<li><a href="#" class="opts" name="judgesettings"
-						ng-show="isUserAdmin()">Judge Settings</a></li>
-					<li><a href="#" class="opts" name="submissions"
-						ng-show="isUserAdmin()">Submissions</a></li>
-					<li><a href="#" class="opts" name="ranking"
-						ng-show="isUserAdmin()">Ranking</a></li>
-
-					<li><a href="" class="opts" ng-click="logoutUser()"><i
-							class="glyphicon glyphicon-off"></i> Logout</a></li>
-
-
-
-				</ul>
-			</div>
-		</div>
-	</div>
 	<div class="main-content" ng-init="getProblems()">
 		<div class="wrap-sidebar">
 			<div class="navbar navbar-default sidebar-left">
@@ -52,8 +20,7 @@
 				style="padding-left: 20px; padding-top: 14px">
 				<h1 style="text-align: center">{{ selectedProblem.problemName
 					}}</h1>
-				<a href=""><button type="button" class="btn btn-success">Download
-						Statement</button></a> <br> <br> <a href="#"><button
+				<a href="{{getStatementLink()}}" download="statement.pdf"><button type="button" class="btn btn-success">Download Statement</button></a> <br> <br> <a href="#"><button
 						type="button" class="btn btn-success">Send Clarification</button></a>
 				<br> <br>
 				<form class="form" action="" ng-submit="submitSolution()"
@@ -83,7 +50,7 @@
 						</thead>
 
 						<tbody ng-model="submissions">
-							<tr class="" ng-repeat="submission in submissions">
+							<tr class="" ng-repeat="submission in submissions | orderBy: 'date':true">
 							<td>{{ submission.id }}</td>
 							<td>{{ submission.points }}</td>
 							<td>{{ submission.status }}</td>

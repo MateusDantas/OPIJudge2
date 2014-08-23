@@ -70,10 +70,10 @@ public class ProblemServer {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int createProblem(
-			@QueryParam("username") String username,
-			@QueryParam("token") String token,
-			@QueryParam("problemname") String problemName,
-			@QueryParam("problemtype") int problemType,
+			@FormDataParam("username") String username,
+			@FormDataParam("token") String token,
+			@FormDataParam("problemname") String problemName,
+			@FormDataParam("problemtype") int problemType,
 			@FormDataParam("testplan") InputStream testPlanStream,
 			@FormDataParam("testplan") FormDataContentDisposition testPlanDetail,
 			@FormDataParam("testcases") InputStream testCasesStream,
@@ -81,10 +81,12 @@ public class ProblemServer {
 			@FormDataParam("statement") InputStream statementStream,
 			@FormDataParam("statement") FormDataContentDisposition statementDetail) {
 
+		System.out.println("CREATING PROBLEM " + problemName + " BY USERNAME "
+				+ username);
 		if (!AuthTokenManager.isUserAuthentic(token, username))
 			throw new UnauthorizedException();
 
-		if (UserServerValidate.hasAdminPrivileges(token, username))
+		if (!UserServerValidate.hasAdminPrivileges(token, username))
 			return UNAUTHORIZED;
 
 		System.out.println(username);
@@ -109,14 +111,14 @@ public class ProblemServer {
 	@GET
 	@Path("/getproblemstatement")
 	@Produces("application/pdf")
-	public Response getStatement(ProblemConsumes problemConsumes) {
+	public Response getStatement(@QueryParam("token") String token,
+			@QueryParam("username") String username,
+			@QueryParam("problemid") int problemId) {
 
-		if (!AuthTokenManager.isUserAuthentic(problemConsumes.getToken(),
-				problemConsumes.getUsername()))
+		if (!AuthTokenManager.isUserAuthentic(token, username))
 			throw new UnauthorizedException();
 
-		File file = ProblemController.getProblemStatement(problemConsumes
-				.getProblemid());
+		File file = ProblemController.getProblemStatement(problemId);
 
 		if (file == null)
 			return Response.status(INVALID_PROBLEM).build();
@@ -149,15 +151,15 @@ public class ProblemServer {
 			throw new UnauthorizedException();
 
 		List<Problem> list = ProblemController.getAllProblems();
-		List<ProblemResponse> listResponse = ProblemResponseUtil.convertList(list);
-		
+		List<ProblemResponse> listResponse = ProblemResponseUtil
+				.convertList(list);
+
 		int responseStatus;
 
 		if (listResponse == null)
 			responseStatus = INVALID_PROBLEM;
-		else 
+		else
 			responseStatus = OK;
-		
 
 		return new ListResponse<ProblemResponse>(listResponse, responseStatus);
 	}

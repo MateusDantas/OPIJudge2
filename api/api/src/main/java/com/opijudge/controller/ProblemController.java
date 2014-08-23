@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
-import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.controller.util.FileUtil;
 import com.opijudge.controller.util.ZipUtil;
 import com.opijudge.controller.validate.ProblemValidate;
@@ -28,12 +27,6 @@ public class ProblemController {
 		try {
 			if (!ProblemValidate.isProblemNameValid(problemName))
 				return INVALID_PROBLEM_NAME;
-
-			if (!AuthTokenManager.isUserAuthentic(token, username))
-				return UNAUTHORIZED;
-
-			if (UserController.getUserAccessLevel(username) != ADMIN_ACCESS_LEVEL)
-				return UNAUTHORIZED;
 
 			Problem problem = new Problem(problemType, problemName);
 
@@ -72,33 +65,33 @@ public class ProblemController {
 
 	public static Problem getProblemById(int problemId) {
 
-		HashMap <String, Integer> mapKeys = new HashMap<String, Integer>();
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
 		mapKeys.put("id", problemId);
-		
+
 		List<Problem> list = getProblemsByProperty(mapKeys);
-		
+
 		if (list == null || list.size() == 0)
 			return null;
-		
+
 		return list.get(0);
 	}
-	
+
 	public static List<Problem> getProblemsByName(String problemName) {
-		
-		HashMap <String, String> mapKeys = new HashMap<String, String>();
+
+		HashMap<String, String> mapKeys = new HashMap<String, String>();
 		mapKeys.put("problemName", problemName);
-		
+
 		List<Problem> list = getProblemsByProperty(mapKeys);
-		
+
 		return list;
 	}
-	
+
 	public static List<Problem> getAllProblems() {
-		
+
 		HashMap<String, String> mapKeys = new HashMap<String, String>();
-		
+
 		List<Problem> list = getProblemsByProperty(mapKeys);
-		
+
 		return list;
 	}
 
@@ -123,20 +116,23 @@ public class ProblemController {
 			return null;
 		}
 	}
-	
+
 	public static File getProblemStatement(int problemId) {
-		
+
 		Problem problem = getProblemById(problemId);
 
 		if (problem == null)
 			return null;
 
 		String problemPath = PROBLEM_PATH;
-		
-		ProblemDAOImpl problemDAO = new ProblemDAOImpl(problem, problemPath + "statement.pdf");
+
+		System.out.println(problemPath
+				+ String.valueOf(problem.getId()) + "/" + "statement.pdf");
+
+		ProblemDAOImpl problemDAO = new ProblemDAOImpl(problem, problemPath);
 		if (!problemDAO.loadStatement())
 			return null;
-		
+
 		return problemDAO.getStatement();
 	}
 }

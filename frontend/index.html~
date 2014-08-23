@@ -21,10 +21,13 @@
 	<script src="opiApp/controllers/homeController.js"></script>
 	<script src="opiApp/controllers/registerController.js"></script>
 	<script src="opiApp/controllers/navController.js"></script>
+    <script src="opiApp/controllers/addProblemController.js"></script>
 	<script src="opiApp/services/authService.js"></script>
     <script src="opiApp/services/submissionService.js"></script>
     <script src="opiApp/services/problemService.js"></script>
     <script src="opiApp/services/httpInterceptor.js"></script>
+    <script src="opiApp/directives/fileModel.js"></script>
+    <script src="opiApp/prototype/arrayPrototype.js"></script>
 	
     <script type="text/javascript">
       
@@ -33,7 +36,40 @@
       });
     </script>
   </head>
-  <body ng-controller="LoginController">
+  <body>
+    <div id="navigation" ng-controller="NavbarController">
+        <div class="wrapper" ng-show="isUserLoggedIn()">
+            <div class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+			    <div class="navbar-header">
+				    <button type="button" class="navbar-toggle" data-toggle="collapse"
+					    data-target=".navbar-collapse">
+					    <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						    class="icon-bar"></span> <span class="icon-bar"></span>
+				    </button>
+				    <a class="navbar-brand" href="/">OPI Judge</a>
+			    </div>
+			    <div class="collapse navbar-collapse">
+				    <ul class="nav navbar-nav">
+					    <li class="active "><a href="#" class="opts" name="home">Home</a></li>
+
+					    <li><a href="#/addproblem" class="opts" name="addproblem"
+						    ng-show="isUserAdmin()">Add Problem</a></li>
+					    <li><a href="#" class="opts" name="judgesettings"
+						    ng-show="isUserAdmin()">Judge Settings</a></li>
+					    <li><a href="#" class="opts" name="submissions"
+						    ng-show="isUserAdmin()">Submissions</a></li>
+					    <li><a href="#" class="opts" name="ranking"
+						    ng-show="isUserAdmin()">Ranking</a></li>
+
+					    <li><a href="" class="opts" ng-click="logoutUser()"><i
+							    class="glyphicon glyphicon-off"></i> Logout</a></li>
+				    </ul>
+			    </div>
+		    </div>
+	        </div>
+        </div>
+    </div>
     <div id="main">
       <div ng-view>
       </div>

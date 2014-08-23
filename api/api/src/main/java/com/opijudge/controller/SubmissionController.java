@@ -38,11 +38,22 @@ public class SubmissionController {
 			if (user.getId() < 1)
 				return INVALID_USER;
 
+			Problem problem = ProblemController.getProblemById(problemId);
+			if (problem == null)
+				return INVALID_PROBLEM;
+
+			Submission submission = new Submission(problemId, user.getId(),
+					FileUtil.getFileExtension(fileDetail.getFileName()),
+					new Date());
+
+			if (!submission.saveToDatabase())
+				return INTERNAL_ERROR;
+
 			File file = FileUtil.convertToFile(
 					inputStream,
 					fileDetail,
 					SUBMISSION_PATH
-							+ String.valueOf(user.getId())
+							+ String.valueOf(submission.getId())
 							+ "."
 							+ FileUtil.getFileExtension(fileDetail
 									.getFileName()));
@@ -54,17 +65,6 @@ public class SubmissionController {
 				file.delete();
 				return INVALID_FILE;
 			}
-
-			Problem problem = ProblemController.getProblemById(problemId);
-			if (problem == null)
-				return INVALID_PROBLEM;
-
-			Submission submission = new Submission(problemId, user.getId(),
-					FileUtil.getFileExtension(fileDetail.getFileName()),
-					new Date());
-
-			if (!submission.saveToDatabase())
-				return INTERNAL_ERROR;
 
 			if (!ServerController.singleSubmission(submission.getId()))
 				return INTERNAL_ERROR;
@@ -174,8 +174,9 @@ public class SubmissionController {
 
 		String submissionPath = SUBMISSION_PATH;
 
-		SubmissionDAOImpl submissionDAO = new SubmissionDAOImpl(submission, submissionPath);
-		
+		SubmissionDAOImpl submissionDAO = new SubmissionDAOImpl(submission,
+				submissionPath);
+
 		if (!submissionDAO.loadCode())
 			return null;
 

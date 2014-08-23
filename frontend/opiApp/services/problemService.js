@@ -10,17 +10,17 @@
 		var basePath = CONSTANTS.BASE_PATH;
 		var factory = {};
 
-		factory.createProblem = function(username_, token_, problemName_,
-				problemType_, testPlan, testCases, statement) {
+		factory.createProblem = function(data) {
 
 			var formData = new FormData();
-			formData.append('testplan', testPlan);
-			formData.append('testcases', testCases);
-			formData.append('statement', statement);
-			formData.append('username', username_);
-			formData.append('token', token_);
-			formData.append('problemname', problemName_);
-			formData.append('problemtype', problemType_);
+			
+			formData.append('testplan', data.testPlan);
+			formData.append('testcases', data.testCases);
+			formData.append('statement', data.statement);
+			formData.append('username', data.username);
+			formData.append('token', data.token);
+			formData.append('problemname', data.problemName);
+			formData.append('problemtype', data.problemType);
 
 			return $http.post(basePath + CONSTANTS.CREATE_PROBLEM_PATH,
 					formData, {

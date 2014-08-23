@@ -1,0 +1,51 @@
+<div class="wrap-sidebar-full">
+	<div class="navbar navbar-default sidebar-left-full">
+		<div class="container" ng-model="problemData">
+			<div class="alert alert-danger" style="margin-top: 20px;"
+				ng-model="returnMessage" ng-show="returnMessage !== ''">
+				<center ng-bind="returnMessage"></center>
+			</div>
+
+			<h2 style="text-align: center">Add a Problem</h2>
+			<form role="form" action="" ng-submit="addProblem(problemData)"
+				enctype="multipart/form-data">
+				<div class="form-group">
+					Problem Name: <input type="text" class="form-control"
+						ng-model="problemData.problemName" placeholder="Problem Name"
+						name='problemname' style="width: 20%">
+				</div>
+				<div class="form-group">
+					<label for="statement-file">Test Plan</label> <input type="file"
+						file-model="problemData.testPlan" id="testplanfile"
+						name="testplanfile">
+					<p class="help-block">
+						Your test plan must contain information about<br> time limit,
+						memory limit and the organization of all test cases per test set.<br>
+						See documentation for further information.
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="statement-file">Problem Statement</label> <input
+						type="file" file-model="problemData.statement" id="statementfile"
+						name="statementfile">
+					<p class="help-block">Upload Your Problem Statement</p>
+				</div>
+				<div class="form-group">
+					Problem Type
+					<select class="form-control" style="width: 20%" ng-model="problemData.problemType">
+						<option value="1" ng-selected="true">Score</option>
+						<option value="2">Binary</option>
+					</select>
+				</div>
+				
+				<div class="form-group has-error">
+					<label for="statement-file">Input / Ouput Files</label> <input
+						type="file" file-model="problemData.testCases" id="inputfile"
+						name="inputfile">
+				</div>
+				<button type="submit" class="btn btn-danger" name="addproblem">Send</button>
+				<br> <br>
+			</form>
+		</div>
+	</div>
+</div>
