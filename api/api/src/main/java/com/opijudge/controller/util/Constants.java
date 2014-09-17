@@ -43,5 +43,9 @@ public class Constants {
 	 */
 	public static final String JUDGE_HOSTNAME = "localhost";
 	public static final int JUDGE_PORT = 8722;
+	/*
+	 *6. Clarification Variables
+	 */
+	public static final int INVALID_MESSAGE = 60;
 	
 }
