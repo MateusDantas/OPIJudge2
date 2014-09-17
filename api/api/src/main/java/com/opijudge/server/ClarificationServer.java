@@ -50,13 +50,14 @@ public class ClarificationServer {
 				&& clarification.getType() == GLOBAL_TYPE)
 			type = GLOBAL_TYPE;
 
-		User user = UserController.getUserByUsername(clarification.getUsername());
-		
+		User user = UserController.getUserByUsername(clarification
+				.getUsername());
+
 		if (user == null)
 			return INVALID_USER;
-		
+
 		int userId = user.getId();
-		
+
 		return ClarificationController.createClarification(userId,
 				clarification.getProblemid(),
 				clarification.getQuestionmessage(), type);
