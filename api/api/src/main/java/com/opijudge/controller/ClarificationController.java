@@ -19,7 +19,7 @@ public class ClarificationController {
 	 * the clarification was created.
 	 * 
 	 */
-	public int createClarification(int userId, int problemId, String questionMessage, int type) {
+	public static int createClarification(int userId, int problemId, String questionMessage, int type) {
 		
 		return 0;
 	}
@@ -30,7 +30,7 @@ public class ClarificationController {
 	 * @param answerMessage
 	 * @return
 	 */
-	public int answerClarificaton(int clarificationId, String answerMessage) {
+	public static int answerClarificaton(int clarificationId, String answerMessage) {
 		
 		return 0;
 	}
@@ -40,7 +40,7 @@ public class ClarificationController {
 	 * @param clarificationId
 	 * @return
 	 */
-	public Clarification getClarification(int clarificationId) {
+	public static Clarification getClarification(int clarificationId) {
 		
 		return null;
 	}
@@ -50,7 +50,7 @@ public class ClarificationController {
 	 * @param type
 	 * @return
 	 */
-	public List<Clarification> getAllClarificationsByType(int type) {
+	public static List<Clarification> getAllClarificationsByType(int type) {
 		
 		return null;
 	}
@@ -59,17 +59,7 @@ public class ClarificationController {
 	 * 
 	 * @return
 	 */
-	public List<Clarification> getAllClarifications() {
-		
-		return null;
-	}
-	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Clarification> getUnansweredClarifications() {
+	public static List<Clarification> getAllClarifications() {
 		
 		return null;
 	}
@@ -79,7 +69,17 @@ public class ClarificationController {
 	 * 
 	 * @return
 	 */
-	public List<Clarification> getClarificationsByUser() {
+	public static List<Clarification> getUnansweredClarifications() {
+		
+		return null;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static List<Clarification> getClarificationsByUser() {
 		
 		return null;
 	}

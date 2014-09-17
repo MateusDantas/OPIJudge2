@@ -69,14 +69,14 @@ public class UserServer {
 	public UserResponse loginUser(UserConsumes userConsumes) {
 
 		int responseStatus = OK;
-		
+
 		User user = UserController
 				.getUserByUsername(userConsumes.getUsername());
-		
-		/*if (user != null
+
+		if (user != null
 				&& (user.getIsBlocked() == 1 && user.getAccessLevel() != ADMIN_ACCESS_LEVEL))
-			return new UserResponse(null, null, USER_IS_BLOCKED);*/
-		
+			return new UserResponse(null, null, USER_IS_BLOCKED);
+
 		if (AuthTokenManager.getTokenUser(userConsumes.getUsername()) == null)
 			responseStatus = UserController.loginUser(
 					userConsumes.getUsername(), userConsumes.getPassword());
@@ -291,33 +291,33 @@ public class UserServer {
 
 		return userResponse;
 	}
-	
+
 	@Path("/stateusers")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int blockAllUsers(UserConsumes userConsumes) {
-		
+
 		if (!AuthTokenManager.isUserAuthentic(userConsumes.getToken(),
 				userConsumes.getUsername()))
 			throw new UnauthorizedException();
-		
+
 		if (!UserServerValidate.hasAdminPrivileges(userConsumes.getToken(),
 				userConsumes.getUsername()))
 			return UNAUTHORIZED;
-		
+
 		List<User> listUsers = UserController.getAllUsers();
-		
+
 		if (listUsers == null)
 			return INTERNAL_ERROR;
-		
+
 		for (User user : listUsers) {
 			if (user.getAccessLevel() == ADMIN_ACCESS_LEVEL)
 				continue;
 			user.setIsBlocked(userConsumes.getUserState());
 			user.saveToDatabase();
 		}
-		
+
 		return OK;
 	}
 
