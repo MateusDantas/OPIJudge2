@@ -1,5 +1,7 @@
 package com.opijudge.controller;
 
+import java.util.List;
+
 import com.opijudge.models.Clarification;
 
 import static com.opijudge.controller.util.Constants.*;
@@ -48,7 +50,7 @@ public class ClarificationController {
 	 * @param type
 	 * @return
 	 */
-	public Clarification getAllClarificationsByType(int type) {
+	public List<Clarification> getAllClarificationsByType(int type) {
 		
 		return null;
 	}
@@ -57,9 +59,29 @@ public class ClarificationController {
 	 * 
 	 * @return
 	 */
-	public Clarification getAllClarifications() {
+	public List<Clarification> getAllClarifications() {
 		
 		return null;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Clarification> getUnansweredClarifications() {
+		
+		return null;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Clarification> getClarificationsByUser() {
+		
+		return null;
+	}
+
 }
