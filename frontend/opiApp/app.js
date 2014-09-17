@@ -26,21 +26,16 @@
 					templateUrl : 'opiApp/views/addproblem.html',
 					controller : 'AddProblemController'
 				})
-
-				/*
-				 * .when('submissions', { templateUrl :
-				 * 'opiApp/views/submissions.html', controller :
-				 * 'submissionsController' })
-				 * 
-				 * .when('ranking', { templateUrl : 'opiApp/views/ranking.html',
-				 * controller : 'rankingController' })
-				 * 
-				 * .when('profile', { templateUrl : 'opiApp/views/profile.html',
-				 * controller : 'profileController' })
-				 * 
-				 * .when('server', { templateUrl : 'opiApp/views/server.html',
-				 * controller : 'serverController' })
-				 */
+				
+				.when('/submissions', {
+					templateUrl : 'opiApp/views/submissions.html',
+					controller : 'SubmissionsController'
+				})
+				
+				.when('/ranking', {
+					templateUrl : 'opiApp/views/ranking.html',
+					controller : 'RankingController'
+				})
 
 				.otherwise({
 					redirectTo : '/'
@@ -91,7 +86,7 @@
 						/*
 						 * PATHS
 						 */
-						BASE_PATH : 'http://localhost:8888/',
+						BASE_PATH : 'http://69.164.199.248:8080/',
 						/*
 						 * USER PATHS
 						 */
@@ -103,6 +98,7 @@
 						GET_USER_BY_ID_PATH : 'users/getuserbyid',
 						GET_USER_BY_USERNAME_PATH : 'users/getuserbyusername',
 						GET_USER_BY_EMAIL_PATH : 'users/getuserbyemail',
+						GET_RANKING : 'users/rankingusers',
 
 						/*
 						 * SUBMISSION PATHS
@@ -113,6 +109,8 @@
 						GET_SUBMISSION_BY_PROBLEM : 'submission/getsubmissionbyproblem',
 						GET_SUBMISSION_BY_USER_IN_PROBLEM : 'submission/getsubmissionsbyuser_in_problem',
 						GET_USER_CODE : 'submission/getusercode',
+						GET_LAST_SUBMISSIONS : 'submission/lastsubmissions',
+						REJUDGE_SUBMISSION_PATH : 'submission/rejudgesub',
 						/*
 						 * PROBLEM PATHS
 						 */

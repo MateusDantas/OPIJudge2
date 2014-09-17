@@ -33,51 +33,10 @@ class SelectiveOpenPolicy(SandboxPolicy):
 
     sc_table = None
     sc_safe = dict( # white list of essential linux syscalls
-        i686 = set([0, 3, 4,5,6, 19, 45, 54, 90,33, 91, 122, 125, 140, 163, \
+        i686 = set([0, 3, 4, 19, 45, 54, 90, 91, 122, 125, 140, 163, \
                     192, 197, 224, 243, 252, ]),
-        x86_64 = set([0, 1, 2, 5, 8, 9, 10, 11, 12, 16, 25, 63, 158, 219, 231, ])
+        x86_64 = set([0, 1, 5, 8, 9, 10, 11, 12, 16, 25, 63, 158, 219, 231, ])
     )
-    sc_safe['x86_64'] = sc_safe['x86_64'] | set([
-        # User-defined safe calls added here
-        3,      # close
-        4,      # stat
-        6,      # lstat
-        13,     # rt_sigaction
-        14,     # rt_sigprocmask
-        15,     # rt_sigreturn
-        21,     # access
-        #22,    # pipe MATLAB
-        32,     # dup
-        33,     # dup3
-        39,     # getpid MATLAB
-        #41,    # sendfile MATLAB
-        #42,    # socket MATLAB
-        #43,    # connect MATLAB
-        #56,    # clone MATLAB. THIS IS A NO-NO. Breaks sandbox.
-        #59,    # execve MATLAB
-        #61,    # wait4 MATLAB
-        72,     # fcntl
-        78,     # getdents
-        79,     # getcwd
-        #80,    # chdir MATLAB
-        89,     # readlink
-        97,     # getrlimit
-        100,    # times
-        102,    # getuid
-        104,    # getgid
-        107,    # geteuid
-        108,    # getegid
-        #110,   # getppid MATLAB
-        #111,   # getpgrp MATLAB
-        131,    # sigaltstack (Python3)
-        202,    # futex
-        #203,   # sched_setaffinity MATLAB
-        #204,   # sched_getaffinity MATLAB
-        218,    # set_tid_address
-        #257,    # openat Python3  ****SECURITY HOLE. Disallowed *****
-        #269,   # faccessat MATLAB
-        273,    # set_robust_list
-    ])
 
    
     def __init__(self, sbox, extraPaths = [], extraWriteablePaths = []):

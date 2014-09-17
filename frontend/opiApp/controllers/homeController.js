@@ -17,6 +17,7 @@
 
 		$scope.submissions = [];
 
+		$scope.returnMessage = "";
 		$scope.submissionData = {
 
 			username : authService.getUsername(),
@@ -78,7 +79,7 @@
 
 						console.log(data);
 
-						if (data.responseStatus === CONSTANTS.OK) {
+						if (parseInt(data.responseStatus) === CONSTANTS.OK) {
 							$scope.submissions = data.list;
 							console.log($scope.submissions);
 						} else {
@@ -93,9 +94,15 @@
 			$scope.submissionData.problemid = $scope.selectedProblem.id;
 			console.log(JSON.stringify($scope.submissionData.file));
 
+			$scope.returnMessage = "Submitting your soluttion...";
 			submissionService.makeSubmission($scope.submissionData).then(
 					function(status) {
 
+						if (parseInt(status) === CONSTANTS.OK)
+							$scope.returnMessage = "Solution submitted successfully, press refresh button to see results";
+						else
+							$scope.returnMessage = "Something went wrong, try again or contact admin";
+						
 						console.log(status);
 					});
 		};
@@ -109,9 +116,20 @@
 			
 			return PATH;
 		};
+		
+		$scope.getCodeLink = function(submissionId) {
+			
+			var PATH = CONSTANTS.BASE_PATH + CONSTANTS.GET_USER_CODE + '?';
+			PATH += "username=" + $scope.problemData.username;
+			PATH += "&token=" + $scope.problemData.token;
+			PATH += "&submissionid=" + submissionId;
+			
+			return PATH;
+		};
 
 		$scope.changeProblemView = function(problem) {
 
+			$scope.returnMessage = "";
 			$scope.selectedProblem = problem;
 			$scope.submissionData.problemid = problem.id;
 			$scope.problemData.problemid = problem.id;

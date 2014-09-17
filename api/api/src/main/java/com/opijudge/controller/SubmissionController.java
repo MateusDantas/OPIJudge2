@@ -2,9 +2,12 @@ package com.opijudge.controller;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import org.hibernate.criterion.Order;
 
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.models.Problem;
@@ -78,30 +81,23 @@ public class SubmissionController {
 		return OK;
 	}
 
-	public static int rejudgeSubmission(String username, String token,
-			int submissionId) {
-
-		try {
-			if (!AuthTokenManager.isUserAuthentic(token, username))
-				return INVALID_USER;
-
-			User user = UserController.getUserByUsername(username);
-			if (user == null || user.getId() < 1)
-				return INVALID_USER;
-
-			if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL)
-				return UNAUTHORIZED;
-
-			if (!ServerController.rejudgeSubmission(submissionId))
-				return INTERNAL_ERROR;
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			return INTERNAL_ERROR;
-		}
-
-		return OK;
+	
+	public static Submission getMaxSubmissionInProblem(int userId, int problemId) {
+		
+		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
+		mapKeys.put("problemId", problemId);
+		mapKeys.put("userId", userId);
+		
+		List<Order> orders = new ArrayList<Order>();
+		
+		orders.add(Order.desc("points"));
+		
+		List<Submission> list = getSubmissionsByProperty(mapKeys, orders, 1);
+		
+		if (list == null || list.size() == 0)
+			return null;
+		
+		return list.get(0);
 	}
 
 	public static List<Submission> getSubmissionsByUserInProblem(int userId,
@@ -111,7 +107,7 @@ public class SubmissionController {
 		mapKeys.put("problemId", problemId);
 		mapKeys.put("userId", userId);
 
-		return getSubmissionsByProperty(mapKeys);
+		return getSubmissionsByProperty(mapKeys, null, -1);
 	}
 
 	public static List<Submission> getSubmissionsByProblem(int problemId) {
@@ -119,7 +115,7 @@ public class SubmissionController {
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
 		mapKeys.put("problemId", problemId);
 
-		return getSubmissionsByProperty(mapKeys);
+		return getSubmissionsByProperty(mapKeys, null, -1);
 	}
 
 	public static List<Submission> getSubmissionsByUser(int userId) {
@@ -127,7 +123,7 @@ public class SubmissionController {
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
 		mapKeys.put("userId", userId);
 
-		return getSubmissionsByProperty(mapKeys);
+		return getSubmissionsByProperty(mapKeys, null, -1);
 	}
 
 	public static Submission getSubmissionById(int submissionId) {
@@ -135,16 +131,38 @@ public class SubmissionController {
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();
 		mapKeys.put("id", submissionId);
 
-		List<Submission> list = getSubmissionsByProperty(mapKeys);
+		List<Submission> list = getSubmissionsByProperty(mapKeys, null, -1);
 
 		if (list == null || list.size() == 0)
 			return null;
 
 		return list.get(0);
 	}
+	
+	public static <T> List<Submission> getLastSubmissions(int limitSize, int indexPage) {
+		
+		HashMap<String, String> mapKeys = new HashMap<String, String>();
+		
+		List<Order> orders = new ArrayList<Order>();
+		
+		orders.add(Order.desc("id"));
+		
+		List<Submission> list = getSubmissionsByProperty(mapKeys, orders, limitSize * indexPage);
+		
+		if (list == null || list.size() == 0)
+			return null;
+		
+		List<Submission> listResponse = new ArrayList<Submission>();
+		
+		for (int i = list.size() - 1; i >= Math.max(0, list.size() - limitSize); i--) {
+			listResponse.add(list.get(i));
+		}
+		
+		return listResponse;
+	}
 
 	public static <T> List<Submission> getSubmissionsByProperty(
-			HashMap<String, T> mapKeys) {
+			HashMap<String, T> mapKeys, List<Order> orders, int limitSize) {
 
 		try {
 
@@ -155,7 +173,7 @@ public class SubmissionController {
 
 			@SuppressWarnings("unchecked")
 			List<Submission> list = (List<Submission>) submission
-					.getAllByProperty(mapKeys);
+					.getAllByProperty(mapKeys, orders, limitSize);
 
 			return list;
 
@@ -180,6 +198,7 @@ public class SubmissionController {
 		if (!submissionDAO.loadCode())
 			return null;
 
+		System.out.println("codeLoaded");
 		return submissionDAO.getCode();
 	}
 }

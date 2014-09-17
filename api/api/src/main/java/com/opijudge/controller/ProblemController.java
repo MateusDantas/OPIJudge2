@@ -2,6 +2,7 @@ package com.opijudge.controller;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.opijudge.controller.util.ZipUtil;
 import com.opijudge.controller.validate.ProblemValidate;
 import com.opijudge.models.Problem;
 import com.opijudge.models.ProblemDAOImpl;
+import com.opijudge.models.Submission;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 
 import static com.opijudge.controller.util.Constants.*;
@@ -63,6 +65,25 @@ public class ProblemController {
 		return OK;
 	}
 
+	public static HashMap<String, Integer> getUserScore(int userId) {
+		
+		List<Problem> problems = getAllProblems();
+		if (problems == null)
+			return null;
+		
+		HashMap<String, Integer> hashProblems = new HashMap<String, Integer>();
+		
+		for (Problem problem : problems) {
+			Submission bestSubmission = SubmissionController.getMaxSubmissionInProblem(userId, problem.getId());
+			if (bestSubmission == null)
+				hashProblems.put(problem.getProblemName(), 0);
+			else
+				hashProblems.put(problem.getProblemName(), bestSubmission.getPoints());
+		}
+		
+		return hashProblems;
+	}
+	
 	public static Problem getProblemById(int problemId) {
 
 		HashMap<String, Integer> mapKeys = new HashMap<String, Integer>();

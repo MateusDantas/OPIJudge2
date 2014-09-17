@@ -1,0 +1,81 @@
+<div class="wrap-centerbar" ng-model="submissionsData"
+	ng-init="getLastSubmissions()">
+	<div class="navbar sidebar-center navbar-default"
+		style="padding-left: 20px; padding-top: 14px">
+		<h1 style="text-align: center">Submissions</h1>
+		<div class="row"></div>
+		<form class="navbar-form navbar-left">
+			<div class="form-group"></div>
+		</form>
+		<div class="row clearfix"></div>
+		<button class="btn btn-success btn-sm"
+			style="top: 117px; left: 6.5%; position: relative; z-index: 1000;"
+			ng-click="getSubmissions()">Change</button>
+		<div class="form-group" style="top: 60px; position: relative;">
+			<label class="control-label">Limit Results</label>
+			<div class="controls">
+				<input type="text" ng-model="submissionsData.limitsize"
+					value="{{ submissionsData.limitsize }}" class="form-control"
+					style="width: 6%;">
+			</div>
+		</div>
+		<input type="text" class="form-control pull-right input-sm"
+			ng-model="filterProblemName" placeholder="Filter By Problem"
+			style="width: 10%; right: 2%; top: 20px; position: relative;">
+		<input type="text" class="form-control pull-right input-sm"
+			ng-model="filterUserName" placeholder="Filter By Name"
+			style="width: 10%; right: 3%; top: 20px; position: relative;">
+		<div class="form-group">
+			<div class="controls"></div>
+		</div>
+		<div class="form-group pull-left"></div>
+		<br>
+		<br>
+		<br>
+		<ul class="pager pull-right"
+			style="right: 3%; bottom: 15px; position: relative;">
+			<li style><a href ng-click="backPage()">Prev</a></li>
+			<li><a href ng-click="nextPage()">Next</a></li>
+		</ul>
+		<div class="panel panel-primary" style="width: 98%">
+			<!-- Default panel contents -->
+			<div class="panel-heading" style="text-align: center">
+				<a class="btn pull-left btn-warning btn-xs"
+					ng-click="getLastSubmissions()">Refresh</a>Submissions
+			</div>
+			<!-- Table -->
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Problem</th>
+						<th>Points</th>
+						<th>Result</th>
+						<th>Details</th>
+						<th>Code</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						ng-repeat="submission in lastSubmissions | filter:{userName:filterUserName, problemName:filterProblemName} | orderBy: 'id':true">
+						<td>{{submission.id}}</td>
+						<td>{{submission.userName}}</td>
+						<td>{{submission.problemName}}</td>
+						<td>{{submission.points}}</td>
+						<td>{{submission.status}}</td>
+						<td>{{submission.details}}</td>
+						<td><a href="{{getCodeLink(submission.id)}}"
+							download="{{'code.' + submission.language}}"><button
+									type="button" class="btn btn-success">{{'code.' +
+									submission.language}}</button></a></td>
+						<td><a class="btn pull-left btn-danger btn-xs"
+							ng-click="rejudgeSubmission(submission.id)">Rejudge</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br>
+	</div>
+</div>

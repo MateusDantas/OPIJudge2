@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 16, 2014 11:56:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.opijudge.models.Clarification" table="CLARIFICATION">
+        <id name="id" type="int">
+            <column name="ID" not-null="true" unique="true" />
+			<generator class="identity" />
+        </id>
+        <property name="problemId" type="int">
+            <column name="PROBLEMID" not-null="true" />
+        </property>
+        <property name="userId" type="int">
+            <column name="USERID" not-null="true" />
+        </property>
+        <property name="type" type="int">
+            <column name="TYPE" not-null="true" />
+        </property>
+        <property name="questionMessage" type="java.lang.String">
+            <column name="QUESTION_MESSAGE" />
+        </property>
+        <property name="answerMessage" type="java.lang.String">
+            <column name="ANSWER_MESSAGE" />
+        </property>
+    </class>
+</hibernate-mapping>

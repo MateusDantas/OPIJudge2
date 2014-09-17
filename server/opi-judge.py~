@@ -36,6 +36,7 @@ def RunSub( submission_id ):
 					input_file = test.test_cases[case_id].input_file
 					output_file = test.test_cases[case_id].output_file
 					judge_file = test.test_cases[case_id].judge_file
+					logging.warning(path_to_problem + input_file)
 					answer = RunTestCase(time_limit, memory_limit, path_to_problem + input_file, path_to_problem +output_file, judge_file, submission_id, code_extension)
 					if answer != "OK":
 						outp_text += answer + ";"

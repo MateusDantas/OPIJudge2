@@ -70,7 +70,7 @@
 
 		factory.isAuthenticated = function() {
 
-			if (!$window.sessionStorage.token)
+			if (!$window.localStorage.token)
 				return false;
 
 			return true;
@@ -127,51 +127,51 @@
 		});
 		
 		function setUsername(username) {
-			$window.sessionStorage.username = username;
+			$window.localStorage.username = username;
 		}
 
 		function getUsername() {
-			return $window.sessionStorage.username;
+			return $window.localStorage.username;
 		}
 
 		function deleteUsername() {
-			delete $window.sessionStorage.username;
+			delete $window.localStorage.username;
 		}
 
 		function setUserRole(userRole) {
-			$window.sessionStorage.userRole = userRole;
+			$window.localStorage.userRole = userRole;
 		}
 
 		function getUserRole() {
-			return $window.sessionStorage.userRole;
+			return $window.localStorage.userRole;
 		}
 
 		function deleteUserRole() {
-			delete $window.sessionStorage.userRole;
+			delete $window.localStorage.userRole;
 		}
 
 		function setUserToken(userToken) {
-			$window.sessionStorage.token = userToken;
+			$window.localStorage.token = userToken;
 		}
 
 		function getUserToken() {
-			return $window.sessionStorage.token;
+			return $window.localStorage.token;
 		}
 
 		function deleteUserToken() {
-			delete $window.sessionStorage.token;
+			delete $window.localStorage.token;
 		}
 
 		function setUserId(userId) {
-			$window.sessionStorage.userId = parseInt(userId);
+			$window.localStorage.userId = parseInt(userId);
 		}
 
 		function getUserId() {
-			return parseInt($window.sessionStorage.userId);
+			return parseInt($window.localStorage.userId);
 		}
 
 		function deleteUserId() {
-			delete $window.sessionStorage.userId;
+			delete $window.localStorage.userId;
 		}
 
 		return factory;

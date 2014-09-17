@@ -23,7 +23,7 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 		this.setSubmission(submission);
 		this.setBasePath(basePath);
 	}
-	
+
 	public boolean saveCode() {
 
 		return saveFile(code, getTotalPath());
@@ -40,7 +40,6 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 
 			if (totalPath == null)
 				return false;
-
 
 			if (file.renameTo(new File(totalPath)))
 				return true;
@@ -63,6 +62,7 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 
 	public File loadFile(String totalPath) {
 
+		System.out.println("Loading file " + totalPath);
 		File file = null;
 		try {
 			file = new File(totalPath);
@@ -91,7 +91,7 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 
 		String path = basePath;
 		if (path.endsWith("/"))
-			path += "." + String.valueOf(curId) + extension;
+			path += String.valueOf(curId) + "." + extension;
 		else
 			path += "/" + String.valueOf(curId) + "." + extension;
 

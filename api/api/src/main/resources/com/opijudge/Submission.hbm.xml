@@ -12,8 +12,11 @@
 		<property name="userId" type="int" not-null="true">
 			<column name="USERID" />
 		</property>
-		<property name="status" type="int">
+		<property name="status" type="java.lang.String">
 			<column name="STATUS" />
+		</property>
+		<property name="details" type="java.lang.String">
+			<column name="DETAILS" />
 		</property>
 		<property name="points" type="int">
 			<column name="POINTS" />

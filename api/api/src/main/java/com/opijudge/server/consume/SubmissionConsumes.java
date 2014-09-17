@@ -5,6 +5,8 @@ public class SubmissionConsumes {
 	private int userid;
 	private int problemid;
 	private int submissionid;
+	private int limitsize;
+	private int indexpage;
 	private String username;
 	private String token;
 	
@@ -50,6 +52,30 @@ public class SubmissionConsumes {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public int getLimitSize() {
+		return limitsize;
+	}
+
+	public void setLimitSize(int limitSize) {
+		this.limitsize = limitSize;
+	}
+
+	public int getLimitsize() {
+		return limitsize;
+	}
+
+	public void setLimitsize(int limitsize) {
+		this.limitsize = limitsize;
+	}
+
+	public int getIndexpage() {
+		return indexpage;
+	}
+
+	public void setIndexpage(int indexpage) {
+		this.indexpage = indexpage;
 	}
 	
 }

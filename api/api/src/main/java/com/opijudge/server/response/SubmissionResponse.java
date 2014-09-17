@@ -8,8 +8,11 @@ public class SubmissionResponse {
 
 	private int id;
 	private int problemId;
+	private String problemName;
 	private int userId;
-	private int status;
+	private String userName;
+	private String status;
+	private String details;
 	private int points;
 	private long time;
 	private long memory;
@@ -22,8 +25,9 @@ public class SubmissionResponse {
 
 	}
 
-	public SubmissionResponse(int id, int problemId, int userId, int status,
-			int points, long time, long memory, String language, Date date) {
+	public SubmissionResponse(int id, int problemId, int userId, String status,
+			int points, long time, long memory, String language, Date date,
+			String details) {
 
 		this.setId(id);
 		this.setProblemId(problemId);
@@ -34,20 +38,34 @@ public class SubmissionResponse {
 		this.setMemory(memory);
 		this.setLanguage(language);
 		this.setDate(date);
+		this.setDetails(details);
 	}
-	
+
 	public SubmissionResponse(Submission submission, int responseStatus) {
-		
-		this.setId(submission.getId());
-		this.setProblemId(submission.getProblemId());
-		this.setUserId(submission.getUserId());
-		this.setStatus(submission.getStatus());
-		this.setPoints(submission.getPoints());
-		this.setTime(submission.getTime());
-		this.setMemory(submission.getMemory());
-		this.setLanguage(submission.getLanguage());
-		this.setDate(submission.getDate());
+
+		if (submission != null) {
+			this.setId(submission.getId());
+			this.setProblemId(submission.getProblemId());
+			this.setUserId(submission.getUserId());
+			this.setStatus(submission.getStatus());
+			this.setPoints(submission.getPoints());
+			this.setTime(submission.getTime());
+			this.setMemory(submission.getMemory());
+			this.setLanguage(submission.getLanguage());
+			this.setDate(submission.getDate());
+			this.setDetails(submission.getDetails());
+		}
 		this.setResponseStatus(responseStatus);
+
+	}
+
+	public SubmissionResponse(Submission submission, String problemName,
+			String userName, int responseStatus) {
+
+		this(submission, responseStatus);
+		this.setProblemName(problemName);
+		this.setUserName(userName);
+
 	}
 
 	public int getUserId() {
@@ -74,11 +92,11 @@ public class SubmissionResponse {
 		this.problemId = problemId;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -128,6 +146,30 @@ public class SubmissionResponse {
 
 	public void setResponseStatus(int responseStatus) {
 		this.responseStatus = responseStatus;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
+	public String getProblemName() {
+		return problemName;
+	}
+
+	public void setProblemName(String problemName) {
+		this.problemName = problemName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

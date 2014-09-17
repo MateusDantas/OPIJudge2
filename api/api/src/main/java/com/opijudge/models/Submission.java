@@ -4,9 +4,14 @@ import java.util.Date;
 
 public class Submission extends Entity {
 
-	private int id, problemId, userId, status, points;
+	private int id;
+	private int problemId;
+	private int userId;
+	private int points;
 	private long time, memory;
 	private String language;
+	private String status = "";
+	private String details = "";
 	private Date date;
 
 	public Submission() {
@@ -18,8 +23,8 @@ public class Submission extends Entity {
 		this.setId(id);
 	}
 
-	public Submission(int problemId, int userId, int status, int points,
-			long time, long memory, String language, Date date) {
+	public Submission(int problemId, int userId, String status, int points,
+			long time, long memory, String language, Date date, String details) {
 
 		this.setProblemId(problemId);
 		this.setUserId(userId);
@@ -29,6 +34,7 @@ public class Submission extends Entity {
 		this.setMemory(memory);
 		this.setLanguage(language);
 		this.setDate(date);
+		this.setDetails(details);
 	}
 	
 	public Submission(int problemId, int userId, String language, Date date) {
@@ -79,11 +85,11 @@ public class Submission extends Entity {
 		this.time = time;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -109,5 +115,13 @@ public class Submission extends Entity {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 }

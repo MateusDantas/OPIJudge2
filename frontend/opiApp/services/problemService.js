@@ -36,6 +36,7 @@
 
 		factory.getProblemStatement = function(data) {
 
+			console.log(data);
 			return $http.post(
 					basePath + CONSTANTS.GET_PROBLEM_STATEMENT_PATH,
 					data).then(function(results) {

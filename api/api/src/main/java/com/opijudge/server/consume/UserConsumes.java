@@ -2,6 +2,7 @@ package com.opijudge.server.consume;
 
 public class UserConsumes {
 	
+	private int userState;
 	private String username;
 	private String name;
 	private String email;
@@ -86,5 +87,13 @@ public class UserConsumes {
 
 	public void setNew_password(String new_password) {
 		this.new_password = new_password;
+	}
+
+	public int getUserState() {
+		return userState;
+	}
+
+	public void setUserState(int userState) {
+		this.userState = userState;
 	}
 }

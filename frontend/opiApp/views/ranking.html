@@ -1,0 +1,49 @@
+<div class="wrap-centerbar" ng-init="initAll()">
+	<div class="navbar sidebar-center navbar-default"
+		style="padding-left: 20px; padding-top: 14px">
+		<h1 style="text-align: center">Geral Ranking</h1>
+		<div class="row"></div>
+		<form class="navbar-form navbar-left">
+			<div class="form-group"></div>
+		</form>
+		<div class="row clearfix"></div>
+		<input type="text" class="form-control pull-right input-sm" ng-model="filterUserName"
+			placeholder="Filter By User"
+			style="width: 10%; right: 2%; top: 20px; position: relative;">
+		<div class="form-group">
+			<div class="controls"></div>
+		</div>
+		<div class="form-group pull-left"></div>
+		<br>
+		<br>
+		<br>
+		<div class="panel panel-primary" style="width: 98%">
+			<!-- Default panel contents -->
+			<div class="panel-heading" style="text-align: center">
+			<a class="btn pull-left btn-warning btn-xs"
+							ng-click="initAll()">Refresh</a>
+			Ranking
+			</div>
+			<!-- Table -->
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Pos</th>
+						<th>Name</th>
+						<th ng-repeat="problem in problems">{{problem.problemName}}</th>
+						<th>Total Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="user in users | filter:{userName:filterUserName} | orderBy: 'totalPoints':true">
+						<td>{{$index + 1}}</td>
+						<td>{{user.userName}}</td>
+						<td ng-repeat="problem in problems">{{user.hashProblems[problem.problemName]}}</td>
+						<td>{{user.totalPoints}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br>
+	</div>
+</div>

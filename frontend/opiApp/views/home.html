@@ -16,26 +16,39 @@
 			</div>
 		</div>
 		<div class="wrap-centerbar" ng-model="selectedProblem">
+
 			<div class="navbar navbar-default sidebar-center"
 				style="padding-left: 20px; padding-top: 14px">
+				<div class="alert alert-warning"
+					style="width: 98%; margin-top: 20px; position: relative;"
+					ng-show="returnMessage !== ''">
+					<center ng-bind="returnMessage"></center>
+				</div>
 				<h1 style="text-align: center">{{ selectedProblem.problemName
 					}}</h1>
-				<a href="{{getStatementLink()}}" download="statement.pdf"><button type="button" class="btn btn-success">Download Statement</button></a> <br> <br> <a href="#"><button
-						type="button" class="btn btn-success">Send Clarification</button></a>
-				<br> <br>
+				<a href="{{getStatementLink()}}" download="statement.pdf"><button
+						type="button" class="btn btn-success">Download Statement</button></a>
+				<br> <br> <a href="#"><button type="button"
+						class="btn btn-success">Send Clarification</button></a> <br> <br>
 				<form class="form" action="" ng-submit="submitSolution()"
 					enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="statement-file">Solution File</label> 
-						<input type="file" file-model="submissionData.file">
-						<p class="help-block">Upload Your Solution!</p>
+						<label for="statement-file">Solution File</label> <input
+							type="file" file-model="submissionData.file">
+						<p class="help-block">
+							Upload Your Solution!<br>Your file must match one of the
+							types: {cpp, c, py, java}
+						</p>
 					</div>
 					<button type="submit" class="btn btn-success" name="submitsol">Submit</button>
 				</form>
 				<br> <br> <br>
 				<div class="panel panel-primary" style="width: 98%">
 					<!-- Default panel contents -->
-					<div class="panel-heading" style="text-align: center">Submissions</div>
+					<div class="panel-heading" style="text-align: center">
+						<a class="btn pull-left btn-warning btn-xs"
+							ng-click="getSubmissions()">Refresh</a> Submissions
+					</div>
 
 					<!-- Table -->
 					<table class="table table-striped">
@@ -44,18 +57,22 @@
 								<th>ID</th>
 								<th>Points</th>
 								<th>Result</th>
-								<th>Time</th>
+								<th>Details</th>
 								<th>Code</th>
 							</tr>
 						</thead>
 
 						<tbody ng-model="submissions">
-							<tr class="" ng-repeat="submission in submissions | orderBy: 'date':true">
-							<td>{{ submission.id }}</td>
-							<td>{{ submission.points }}</td>
-							<td>{{ submission.status }}</td>
-							<td>{{ getRealDate(submission.date) }}</td>
-							<td>a</td>
+							<tr class=""
+								ng-repeat="submission in submissions | orderBy: 'date':true">
+								<td>{{ submission.id }}</td>
+								<td>{{ submission.points }}</td>
+								<td>{{ submission.status }}</td>
+								<td>{{ submission.details }}</td>
+								<td><a href="{{getCodeLink(submission.id)}}"
+									download="{{'code.' + submission.language}}"><button
+											type="button" class="btn btn-success">{{'code.' +
+											submission.language}}</button></a></td>
 							</tr>
 						</tbody>
 					</table>

@@ -62,6 +62,13 @@
 			});
 		};
 
+		factory.getLastSubmissions = function(data) {
+			console.log(data);
+			return $http.post(basePath + CONSTANTS.GET_LAST_SUBMISSIONS, data).then(function(results) {
+				return results.data;
+			});
+		};
+		
 		factory.getSubmissionByProblem = function(problemId_, username_, token_) {
 
 			return $http.post(
@@ -74,10 +81,16 @@
 			});
 		};
 
+		factory.rejudgeSubmission = function(data) {
+			
+			return $http.post(basePath + CONSTANTS.REJUDGE_SUBMISSION_PATH, data).then(function(results) {
+				
+				return results.data;
+			});
+		};
+		
 		factory.getSubmissionByUserInProblem = function(data) {
 
-			console.log(data);
-			console.log(CONSTANTS.GET_SUBMISSION_BY_USER_IN_PROBLEM);
 			return $http.post(
 					basePath + CONSTANTS.GET_SUBMISSION_BY_USER_IN_PROBLEM,
 					data).then(function(results) {

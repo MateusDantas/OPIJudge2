@@ -3,12 +3,13 @@ package com.opijudge.controller.util;
 public class Constants {
 	
 	/*
-	 * 1. General Errors
+	 * 1. General
 	 */
 	public static final int INTERNAL_ERROR = 10;
 	public static final int OK = 11;
 	public static final int UNAUTHORIZED = 12;
 	public static final int INVALID_FILE = 13;
+	public static final String SERVER_SECRET_KEY = "309E127J-D021K7S21D7JE9-D#@873214#%DS-odulas029318-*-*";
 	/*
 	 * 2. User Constants
 	 */
@@ -37,5 +38,10 @@ public class Constants {
 	public static final int INVALID_PROBLEM_NAME = 41;
 	public static final String PROBLEM_PATH = "/home/mdantas/problems-opijudge/";
 	public static final long LIMIT_PROBLEM_SIZE = 10L * 10485760L;
+	/*
+	 * 5. Server Variables 
+	 */
+	public static final String JUDGE_HOSTNAME = "localhost";
+	public static final int JUDGE_PORT = 8722;
 	
 }

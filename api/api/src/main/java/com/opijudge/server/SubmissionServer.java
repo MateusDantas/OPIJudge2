@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import com.opijudge.controller.ProblemController;
+import com.opijudge.controller.ServerController;
 import com.opijudge.controller.SubmissionController;
 import com.opijudge.controller.UserController;
 import com.opijudge.controller.auth.AuthTokenManager;
@@ -61,16 +63,73 @@ public class SubmissionServer {
 			@FormDataParam("file") InputStream inputStream,
 			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
 
-		System.out.println("SUBMIT: " +  contentDispositionHeader.getFileName());
+		System.out.println("SUBMIT: " + contentDispositionHeader.getFileName());
 		System.out.println("USERNAME: " + username);
+		
 		if (!AuthTokenManager.isUserAuthentic(token, username))
 			return UNAUTHORIZED;
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(username) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
 
 		int statusCode = SubmissionController.makeSubmission(problemId,
 				username, token, inputStream, contentDispositionHeader);
 
 		return statusCode;
 	}
+
+	@POST
+	@Path("/rejudgesub")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean rejudgeSubmission(SubmissionConsumes submissionConsumes) {
+
+		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
+				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (UserController.getUserAccessLevel(submissionConsumes.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
+
+		System.out.println("Rejuding " + String.valueOf(submissionConsumes.getSubmissionid()));
+		return ServerController.rejudgeSubmission(submissionConsumes
+				.getSubmissionid());
+	}
+	
+	@POST
+	@Path("/rejudgeprob")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean rejudgeProblem(SubmissionConsumes submissionConsumes) {
+
+		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
+				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (UserController.getUserAccessLevel(submissionConsumes.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
+
+		return ServerController.rejudgeAllByProblem(submissionConsumes
+				.getProblemid());
+	}
+	
+	@POST
+	@Path("/rejudgeall")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean rejudgeAll(SubmissionConsumes submissionConsumes) {
+
+		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
+				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (UserController.getUserAccessLevel(submissionConsumes.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
+
+		return ServerController.rejudgeAll();
+	}
+	
 
 	/**
 	 * Method getSubmissionById.
@@ -93,6 +152,11 @@ public class SubmissionServer {
 		int responseStatus;
 		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
 				submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(submissionConsumes
+						.getUsername()) != ADMIN_ACCESS_LEVEL)
 			throw new UnauthorizedException();
 
 		Submission submission = SubmissionController
@@ -137,6 +201,11 @@ public class SubmissionServer {
 
 		User user = UserController.getUserByUsername(submissionConsumes
 				.getUsername());
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(submissionConsumes
+						.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
 
 		if (user == null
 				|| !AuthTokenManager.isUserAuthentic(
@@ -187,6 +256,11 @@ public class SubmissionServer {
 
 		User user = UserController.getUserByUsername(submissionConsumes
 				.getUsername());
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(submissionConsumes
+						.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
 
 		if (user == null
 				|| !AuthTokenManager.isUserAuthentic(
@@ -239,6 +313,11 @@ public class SubmissionServer {
 		User user = UserController.getUserByUsername(submissionConsumes
 				.getUsername());
 
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(submissionConsumes
+						.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
+
 		if (user == null
 				|| !AuthTokenManager.isUserAuthentic(
 						submissionConsumes.getToken(),
@@ -270,6 +349,55 @@ public class SubmissionServer {
 				responseStatus);
 	}
 
+	@POST
+	@Path("/lastsubmissions")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ListResponse<SubmissionResponse> lastSubmissions(
+			SubmissionConsumes submissionConsumes) {
+
+		int responseStatus;
+		User user = UserController.getUserByUsername(submissionConsumes
+				.getUsername());
+
+		if (user == null
+				|| !AuthTokenManager.isUserAuthentic(
+						submissionConsumes.getToken(),
+						submissionConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(submissionConsumes
+						.getUsername()) != ADMIN_ACCESS_LEVEL)
+			throw new UnauthorizedException();
+
+		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL
+				&& user.getId() != submissionConsumes.getUserid()) {
+
+			responseStatus = UNAUTHORIZED;
+			return new ListResponse<SubmissionResponse>(responseStatus);
+		}
+
+		System.out.println("LIMIT SIZE "
+				+ String.valueOf(submissionConsumes.getLimitsize())
+				+ " INDEX PAGE "
+				+ String.valueOf(submissionConsumes.getIndexpage()));
+		List<Submission> list = SubmissionController.getLastSubmissions(
+				submissionConsumes.getLimitsize(),
+				submissionConsumes.getIndexpage());
+
+		List<SubmissionResponse> listResponse = SubmissionResponseUtil
+				.convertList(list, true, true);
+
+		if (listResponse == null)
+			responseStatus = INVALID_SUBMISSION;
+		else
+			responseStatus = OK;
+
+		return new ListResponse<SubmissionResponse>(listResponse,
+				responseStatus);
+	}
+
 	/**
 	 * Method getUserCode.
 	 * 
@@ -283,31 +411,42 @@ public class SubmissionServer {
 	 */
 	@GET
 	@Path("/getusercode")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("text/plain")
-	public Response getUserCode(SubmissionConsumes submissionConsumes) {
+	public Response getUserCode(@QueryParam("username") String username,
+			@QueryParam("token") String token,
+			@QueryParam("submissionid") int submissionId) {
 
-		if (!AuthTokenManager.isUserAuthentic(submissionConsumes.getToken(),
-				submissionConsumes.getUsername()))
+		if (!AuthTokenManager.isUserAuthentic(token, username))
+			throw new UnauthorizedException();
+
+		if (ServerController.getServerStatus() == 0
+				&& UserController.getUserAccessLevel(username) != ADMIN_ACCESS_LEVEL)
 			throw new UnauthorizedException();
 
 		Submission submission = SubmissionController
-				.getSubmissionById(submissionConsumes.getSubmissionid());
-		User user = UserController.getUserByUsername(submissionConsumes
-				.getUsername());
+				.getSubmissionById(submissionId);
+
+		if (submission == null)
+			return Response.status(Status.NOT_FOUND).build();
+
+		User user = UserController.getUserByUsername(username);
+
+		if (user == null)
+			return Response.status(Status.NOT_FOUND).build();
+
 		if (user.getAccessLevel() != ADMIN_ACCESS_LEVEL
 				&& user.getId() != submission.getUserId())
 			return Response.status(Status.UNAUTHORIZED).build();
 
-		File file = SubmissionController.getSubmissionCode(submissionConsumes
-				.getSubmissionid());
+		File file = SubmissionController.getSubmissionCode(submissionId);
 
 		if (file == null)
 			return Response.status(INVALID_SUBMISSION).build();
 
 		ResponseBuilder response = Response.ok((Object) file);
 
-		response.header("Content-Disposition", "attachment; filename=code.txt");
+		response.header("Content-Disposition", "attachment; filename=code."
+				+ submission.getLanguage());
 
 		return response.build();
 	}

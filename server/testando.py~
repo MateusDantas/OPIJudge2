@@ -3,7 +3,7 @@ from sandbox import *
 import os
 
 fo = open("input.txt","r")
-s = Sandbox("a.out",stdin = fo.fileno(), quota = dict(cpu=500,memory=63000000))
+s = Sandbox("../../../source-codes/1",stdin = fo.fileno(), quota = dict(cpu=500,memory=63000000))
 s.run()
 print s.result
 var =  s.probe()

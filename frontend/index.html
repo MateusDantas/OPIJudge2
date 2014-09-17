@@ -23,12 +23,17 @@
 	<script src="opiApp/controllers/navController.js"></script>
     <script src="opiApp/controllers/addProblemController.js"></script>
     <script src="opiApp/controllers/navbarController.js"></script>
+	<script src="opiApp/controllers/submissionsController.js"></script>
+	<script src="opiApp/controllers/rankingController.js"></script>
 	<script src="opiApp/services/authService.js"></script>
+	<script src="opiApp/services/userService.js"></script>
     <script src="opiApp/services/submissionService.js"></script>
     <script src="opiApp/services/problemService.js"></script>
     <script src="opiApp/services/httpInterceptor.js"></script>
     <script src="opiApp/directives/fileModel.js"></script>
     <script src="opiApp/prototype/arrayPrototype.js"></script>
+	<script src="opiApp/controllers/submissionsController.js"></script>
+	
 	
     <script type="text/javascript">
       
@@ -58,9 +63,9 @@
 						    ng-show="isUserAdmin()">Add Problem</a></li>
 					    <li><a href="#" class="opts" name="judgesettings"
 						    ng-show="isUserAdmin()">Judge Settings</a></li>
-					    <li><a href="#" class="opts" name="submissions"
+					    <li><a href="#/submissions" class="opts" name="submissions"
 						    ng-show="isUserAdmin()">Submissions</a></li>
-					    <li><a href="#" class="opts" name="ranking"
+					    <li><a href="#/ranking" class="opts" name="ranking"
 						    ng-show="isUserAdmin()">Ranking</a></li>
 
 					    <li><a href="" class="opts" ng-click="logoutUser()"><i

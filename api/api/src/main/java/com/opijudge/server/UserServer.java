@@ -1,16 +1,21 @@
 package com.opijudge.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.opijudge.controller.ProblemController;
 import com.opijudge.controller.UserController;
 import com.opijudge.controller.auth.AuthTokenManager;
 import com.opijudge.controller.validate.UserValidate;
 import com.opijudge.models.User;
 import com.opijudge.server.consume.UserConsumes;
+import com.opijudge.server.response.RankingResponse;
 import com.opijudge.server.response.UnauthorizedException;
 import com.opijudge.server.response.UserResponse;
 import com.opijudge.server.util.UserServerValidate;
@@ -64,20 +69,24 @@ public class UserServer {
 	public UserResponse loginUser(UserConsumes userConsumes) {
 
 		int responseStatus = OK;
+		
+		User user = UserController
+				.getUserByUsername(userConsumes.getUsername());
+		
+		/*if (user != null
+				&& (user.getIsBlocked() == 1 && user.getAccessLevel() != ADMIN_ACCESS_LEVEL))
+			return new UserResponse(null, null, USER_IS_BLOCKED);*/
+		
 		if (AuthTokenManager.getTokenUser(userConsumes.getUsername()) == null)
 			responseStatus = UserController.loginUser(
 					userConsumes.getUsername(), userConsumes.getPassword());
 
-		User user = UserController.getUserByUsername(userConsumes.getUsername());
-		
-		if (user != null && user.getIsBlocked() == 1)
-			responseStatus = USER_IS_BLOCKED;
-		
 		String token = AuthTokenManager
 				.getTokenUser(userConsumes.getUsername());
 
-		if (user == null || !UserValidate.checkPassword(userConsumes.getPassword(),
-				user.getHashedPassword()))
+		if (user == null
+				|| !UserValidate.checkPassword(userConsumes.getPassword(),
+						user.getHashedPassword()))
 			responseStatus = UNAUTHORIZED;
 
 		if (responseStatus == UNAUTHORIZED) {
@@ -226,7 +235,7 @@ public class UserServer {
 		if (!AuthTokenManager.isUserAuthentic(userConsumes.getToken(),
 				userConsumes.getUsername()))
 			throw new UnauthorizedException();
-		
+
 		int responseStatus;
 		User user = new User();
 
@@ -265,7 +274,7 @@ public class UserServer {
 		if (!AuthTokenManager.isUserAuthentic(userConsumes.getToken(),
 				userConsumes.getUsername()))
 			throw new UnauthorizedException();
-		
+
 		int responseStatus;
 		User user = new User();
 
@@ -281,6 +290,63 @@ public class UserServer {
 		UserResponse userResponse = new UserResponse(user, "", responseStatus);
 
 		return userResponse;
+	}
+	
+	@Path("/stateusers")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int blockAllUsers(UserConsumes userConsumes) {
+		
+		if (!AuthTokenManager.isUserAuthentic(userConsumes.getToken(),
+				userConsumes.getUsername()))
+			throw new UnauthorizedException();
+		
+		if (!UserServerValidate.hasAdminPrivileges(userConsumes.getToken(),
+				userConsumes.getUsername()))
+			return UNAUTHORIZED;
+		
+		List<User> listUsers = UserController.getAllUsers();
+		
+		if (listUsers == null)
+			return INTERNAL_ERROR;
+		
+		for (User user : listUsers) {
+			if (user.getAccessLevel() == ADMIN_ACCESS_LEVEL)
+				continue;
+			user.setIsBlocked(userConsumes.getUserState());
+			user.saveToDatabase();
+		}
+		
+		return OK;
+	}
+
+	@Path("/rankingusers")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<RankingResponse> getRankingUsers(UserConsumes userConsumes) {
+
+		if (!AuthTokenManager.isUserAuthentic(userConsumes.getToken(),
+				userConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		if (!UserServerValidate.hasAdminPrivileges(userConsumes.getToken(),
+				userConsumes.getUsername()))
+			throw new UnauthorizedException();
+
+		List<RankingResponse> list = new ArrayList<RankingResponse>();
+
+		List<User> listUser = UserController.getAllUsers();
+
+		for (User user : listUser) {
+			RankingResponse ranking = new RankingResponse(user.getId(),
+					user.getName(),
+					ProblemController.getUserScore(user.getId()));
+			list.add(ranking);
+		}
+
+		return list;
 	}
 
 }

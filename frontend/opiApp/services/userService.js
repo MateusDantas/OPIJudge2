@@ -2,9 +2,9 @@
 
 	var obiApp = angular.module('obiApp', []);
 
-	var userFactory = function($http) {
+	var userFactory = function($http, CONSTANTS) {
 
-		var basePath = opiApp.CONSTANTS.BASE_PATH;
+		var basePath = CONSTANTS.BASE_PATH;
 		var factory = {};
 
 		factory.getUserAccessLevel = function(username_, token_) {
@@ -19,9 +19,16 @@
 
 		};
 
+		factory.getRanking = function(data) {
+			
+			return $http.post(basePath + CONSTANTS.GET_RANKING, data).then(function(result) {
+				return result.data;
+			});
+		};
+		
 		factory.getUserById = function(username_, token_, userId_) {
 
-			return $http.post(basePath + obiApp.CONSTANTS.GET_USER_BY_ID_PATH,
+			return $http.post(basePath + CONSTANTS.GET_USER_BY_ID_PATH,
 					{
 						username : username_,
 						token : token_,
@@ -34,7 +41,7 @@
 		factory.getUserByUsername = function(username_, token_, user_username_) {
 
 			return $http.post(
-					basePath + obiApp.CONSTANTS.GET_USER_BY_USERNAME_PATH, {
+					basePath + CONSTANTS.GET_USER_BY_USERNAME_PATH, {
 						username : username_,
 						token : token_,
 						user_username : user_username_
@@ -46,7 +53,7 @@
 		factory.getUserByEmail = function(username_, token_, email_) {
 
 			return $http.post(
-					basePath + obiApp.CONSTANTS.GET_USER_BY_EMAIL_PATH, {
+					basePath + CONSTANTS.GET_USER_BY_EMAIL_PATH, {
 						username : username_,
 						token : token_,
 						user_email : email_
@@ -61,8 +68,8 @@
 		return factory;
 	};
 
-	userFactory.$inject = [ '$http' ];
+	userFactory.$inject = [ '$http', 'CONSTANTS' ];
 
-	angular.module('obiApp').factory('userService', userFactory);
+	angular.module('opiApp').factory('userService', userFactory);
 
 }());

@@ -29,6 +29,15 @@ height: auto;
 padding: 7px 9px;
  }
 
+.wrap-sidebar-full{
+	padding-top: 30px;
+	padding-left: 30px;
+  }
+  .sidebar-left-full{
+	float:left;
+	width:97%;
+   }
+
 .btn-custom {
   background-color: hsl(0, 0%, 16%) !important;
   background-repeat: repeat-x;
