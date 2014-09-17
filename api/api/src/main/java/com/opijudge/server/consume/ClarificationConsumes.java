@@ -2,6 +2,7 @@ package com.opijudge.server.consume;
 
 public class ClarificationConsumes {
 
+	private int clarificationId;
 	private int userid;
 	private int problemid;
 	private int type;
@@ -68,6 +69,14 @@ public class ClarificationConsumes {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public int getClarificationId() {
+		return clarificationId;
+	}
+
+	public void setClarificationId(int clarificationId) {
+		this.clarificationId = clarificationId;
 	}
 	
 	
