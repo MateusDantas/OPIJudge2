@@ -2,6 +2,7 @@ package com.opijudge.controller.validate;
 
 import java.util.regex.*;
 
+import com.opijudge.controller.UserController;
 import com.opijudge.models.util.BCrypt;
 
 public class UserValidate {
@@ -50,5 +51,9 @@ public class UserValidate {
 		}
 		
 		return result;
+	}
+	
+	public static boolean isUserIdValid(int userId) {
+		return UserController.getUserById(userId) != null;
 	}
 }

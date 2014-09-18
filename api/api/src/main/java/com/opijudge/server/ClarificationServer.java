@@ -76,7 +76,7 @@ public class ClarificationServer {
 				clarification.getUsername()))
 			return UNAUTHORIZED;
 
-		return ClarificationController.answerClarificaton(
+		return ClarificationController.answerClarification(
 				clarification.getClarificationId(),
 				clarification.getAnswermessage(), clarification.getType());
 	}

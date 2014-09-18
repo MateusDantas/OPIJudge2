@@ -47,7 +47,13 @@ public class Constants {
 	 *6. Clarification Variables
 	 */
 	public static final int INVALID_MESSAGE = 60;
+	public static final int INVALID_TYPE = 61;
+	public static final int INVALID_PROBLEM_ID = 62;
+	public static final int INVALID_USER_ID = 63;
+	public static final int INVALID_CLARIFICATION = 64;
+	public static final int CLARIFICATION_ALREADY_ANSWERED  = 65;
 	public static final int PRIVATE_TYPE = 0;
 	public static final int GLOBAL_TYPE = 1;
+	
 	
 }
