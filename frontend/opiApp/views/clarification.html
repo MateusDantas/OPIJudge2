@@ -1,0 +1,74 @@
+<div class="wrap-centerbar" ng-model="clarifications"
+	ng-init="getClarifications()">
+	<div class="navbar sidebar-center navbar-default"
+		style="padding-left: 20px; padding-top: 14px">
+		<h1 style="text-align: center">Clarifications</h1>
+		<div class="row"></div>
+		<form class="navbar-form navbar-left">
+			<div class="form-group"></div>
+		</form>
+		<div class="row clearfix"></div>
+		<div class="form-group" style="top: 60px; position: relative;">
+			<div class="controls">
+				<div class="drag-mask" data-ds-form="text_field"
+					style="width: 77px; height: 34px;"></div>
+			</div>
+		</div>
+		<div class="drag-mask" data-ds-form="text_field"
+			style="width: 128px; height: 30px;"></div>
+		<div class="drag-mask" data-ds-form="text_field"
+			style="width: 129px; height: 30px;"></div>
+		<div class="form-group">
+			<div class="controls"></div>
+		</div>
+		<div class="form-group pull-left"></div>
+		<br> <br> <br>
+		<ul class="pager pull-right"
+			style="right: 3%; bottom: 15px; position: relative;"></ul>
+		<div class="panel panel-primary" style="width: 98%">
+			<!-- Default panel contents -->
+			<div class="panel-heading" style="text-align: center">
+				<a class="btn pull-right btn-info btn-xs"
+					ng-dialog="createClarificationId"
+					ng-dialog-controller="CreateClarificationController"
+					ng-dialog-class="ngdialog-theme-default"
+					ng-dialog-show-close="true">Create Clarification</a><a
+					class="btn pull-left btn-warning btn-xs"
+					ng-click="getClarifications()">Refresh</a>Clarifications (Open)
+			</div>
+			<!-- Table -->
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>User</th>
+						<th>Problem</th>
+						<th>Question</th>
+						<th>Answer</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						ng-repeat="clarification in clarifications | orderBy: 'clarificationId':true">
+						<td>{{clarification.clarificationId}}</td>
+						<td>{{clarification.userName}}</td>
+						<td>{{clarification.problemName}}</td>
+						<td><a class="btn pull-left btn-success btn-xs"
+							ng-dialog="openQuestionId"
+							ng-dialog-controller="OpenQuestionController"
+							ng-dialog-data="{{clarification}}"
+							ng-dialog-class="ngdialog-theme-default"
+							ng-dialog-show-close="true">Open Question</a></td>
+						<td><a class="btn pull-left btn-success btn-xs"
+							ng-dialog="openAnswerId"
+							ng-dialog-controller="OpenAnswerController"
+							ng-dialog-data="{{clarification}}"
+							ng-dialog-class="ngdialog-theme-default"
+							ng-dialog-show-close="true">Open Answer</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br>
+	</div>
+</div>

@@ -2,8 +2,6 @@
 
 	var opiApp = angular.module('opiApp', [ 'ngRoute' ]);
 
-	
-
 	opiApp
 			.config(function($routeProvider) {
 
@@ -22,16 +20,21 @@
 					controller : 'RegisterController'
 				})
 
+				.when('/clarification', {
+					templateUrl : 'opiApp/views/clarification.html',
+					controller : 'ClarificationController'
+				})
+
 				.when('/addproblem', {
 					templateUrl : 'opiApp/views/addproblem.html',
 					controller : 'AddProblemController'
 				})
-				
+
 				.when('/submissions', {
 					templateUrl : 'opiApp/views/submissions.html',
 					controller : 'SubmissionsController'
 				})
-				
+
 				.when('/ranking', {
 					templateUrl : 'opiApp/views/ranking.html',
 					controller : 'RankingController'
@@ -50,8 +53,9 @@
 							'authService',
 							function($q, $rootScope, $location, authService) {
 
-								var adminUrls = new Array('obiApp/views/addproblem.html');
-								
+								var adminUrls = new Array(
+										'obiApp/views/addproblem.html');
+
 								$rootScope
 										.$on(
 												"$routeChangeStart",
@@ -99,6 +103,15 @@
 						GET_USER_BY_USERNAME_PATH : 'users/getuserbyusername',
 						GET_USER_BY_EMAIL_PATH : 'users/getuserbyemail',
 						GET_RANKING : 'users/rankingusers',
+
+						/*
+						 * CLARIFICATION PATHS
+						 */
+						CREATE_CLARIFICATION_PATH : 'clarification',
+						CHANGE_CLARIFICATION_PATH : 'clarification',
+						GET_CLARIFICATIONS_BY_USER_PATH : 'clarification',
+						GET_UNANSWERED_CLARIFICATIONS_PATH : 'clarification/unanswered',
+						GET_ALL_CLARIFICATIONS_PATH : 'clarification/all',
 
 						/*
 						 * SUBMISSION PATHS
